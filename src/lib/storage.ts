@@ -20,8 +20,8 @@ type Bewerbungs = {
     fullName: string;
     address: string;
     additional: string;
-    application: Text;
+    application: string;
 
 };
 export const bewerbungsStore: Writable<Bewerbungs[]> = localStorageStore('Bewerbungs', bewerbungsDemo);
-export const profileStore: Writable<profile[]> = localStorageStore('profile', []);
+export const profileStore: Writable<profile[]> = localStorageStore('profile', false);

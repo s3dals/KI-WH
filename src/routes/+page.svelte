@@ -42,15 +42,19 @@
 
 	<div class="flex items-center justify-between">
 		<h2 style="font-weight: bold">Die letzte Bewerbungen:</h2>
-		<a href="/new" class="btn variant-ghost-primary">Neue Bewerbung</a>
+		<a href="/new" class="btn variant-ghost-primary p-2">Neue Bewerbung</a>
 	</div>
 </div>
+<br/>
 <div class="grid grid-col-3 gap-4">
 	{#each $bewerbungsStore.reverse() as bewerbung}
 	<div class="card p-4 flex flex-col gap-2 relative">
 		<button on:click={() => deleteNote(bewerbung.id)} class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button>
-		<div>Bewerbung an: 
+		<div>
+            <a href="/bewerbung/{bewerbung.id}" class="href">
+            Bewerbung an: 
 			{bewerbung.address}
+        </a>
 		</div>
 		<div class="flex gap-1 flex-wrap">
 			<!-- {#each bewerbung.tags as tag}

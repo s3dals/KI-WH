@@ -1,23 +1,46 @@
 <script lang="ts">
+	import { error } from '@sveltejs/kit';
+
 	import type { PageData } from './$types';
-    // import { bewerbung } from '$lib/demo.ts';
-	import { clipboard  } from '@skeletonlabs/skeleton';
+	// import { bewerbung } from '$lib/demo.ts';
+	import { clipboard } from '@skeletonlabs/skeleton';
+	import { bewerbungsStore } from '$lib/storage';
 
 	export let data;
+	let application;
+	$: ({ id } = data);
 
-    $: ({id} = data);
+	// export function load({ params }) {
+	// 	const bewerbungs = $bewerbungsStore.find((bewerbungs) => bewerbungs.id === params.bewerbungID);
 
+	// 	if (!bewerbungs) throw error(404);
+
+	// 	return {
+	// 		bewerbungs
+	// 	};
+	// }
 </script>
 
 <div class="container h-full mx-auto gap-2 flex flex-col">
-	<h2 style="font-weight: bold">Bewerbung {data.bewerbungs.id}</h2>
-	<p>Datum: {data.bewerbungs.date}</p>
-    <p>Mietername: {data.bewerbungs.fullName}</p>
-    <p>Wohnunganschrift: {data.bewerbungs.address}</p>
-    <p>Besonderheiten: {data.bewerbungs.additional}</p>
-	<!-- Source -->
-	<textarea class="textarea" style="overflow-y: scroll"  rows="7" data-clipboard="exampleInput" >{data.bewerbungs.application}</textarea>
+	{#each $bewerbungsStore.reverse() as bewerbung}
+		{#if bewerbung.id == id}
+			<h2 style="font-weight: bold">Bewerbung {bewerbung.id}</h2>
+			<p>Datum: {bewerbung.date}</p>
+			<p>Mietername: {bewerbung.fullName}</p>
+			<p>Wohnunganschrift: {bewerbung.address}</p>
+			<p>Besonderheiten: {bewerbung.additional}</p>
 
-	<!-- Trigger -->
-	<button class="btn variabt-ghost-primary " use:clipboard={{ input: 'exampleInput' }}>Bewerbung kopieren</button>
+			<textarea
+				class="textarea"
+				style="overflow-y: scroll"
+				rows="7"
+				data-clipboard="exampleInput"
+				value={bewerbung.application}
+			/>
+
+			<button class="btn variabt-ghost-primary" use:clipboard={{ input: 'exampleInput' }}
+				>Bewerbung kopieren</button
+			>
+		{/if}
+	{/each}
 </div>
