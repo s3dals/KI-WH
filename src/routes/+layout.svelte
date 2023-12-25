@@ -16,16 +16,25 @@
 
 	initializeStores();
 
+	const drawerSettings: DrawerSettings = {
+	id: 'example-3',
+	// Provide your property overrides:
+
+
+	width: 'w-[280px] md:w-[480px]',
+	padding: 'p-4',
+	rounded: 'rounded-xl',
+};
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
-		drawerStore.open();
+		drawerStore.open(drawerSettings);
 	}
 </script>
 
 <Toast position="tr" />
 <Modal />
 
-<Drawer>
+<Drawer width="500">
 	<Navigation />
 </Drawer>
 
@@ -33,7 +42,7 @@
 	<svelte:fragment slot="header">
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<button class="md:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+				<button class="btn btn-sm mr-4" on:click={drawerOpen}>
 					<span>
 						<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
 							<rect width="100" height="20" />
@@ -54,9 +63,9 @@
 			<!-- <svelte:fragment slot="headline">(headline)</svelte:fragment> -->
 		</AppBar>
 	</svelte:fragment>
-	<svelte:fragment slot="sidebarLeft">
+	<!-- <svelte:fragment slot="sidebarLeft">
 		<Navigation />
-	</svelte:fragment>
+	</svelte:fragment> -->
 	<!-- <svelte:fragment slot="sidebarRight">Sidebar Right</svelte:fragment> -->
 	<!-- <svelte:fragment slot="pageHeader">Page Header</svelte:fragment> -->
 	<!-- Router Slot -->

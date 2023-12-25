@@ -10,21 +10,13 @@
 	let application;
 	$: ({ id } = data);
 
-	// export function load({ params }) {
-	// 	const bewerbungs = $bewerbungsStore.find((bewerbungs) => bewerbungs.id === params.bewerbungID);
 
-	// 	if (!bewerbungs) throw error(404);
-
-	// 	return {
-	// 		bewerbungs
-	// 	};
-	// }
 </script>
 
 <div class="container h-full mx-auto gap-2 flex flex-col">
 	{#each $bewerbungsStore.reverse() as bewerbung}
 		{#if bewerbung.id == id}
-			<h2 style="font-weight: bold">Bewerbung {bewerbung.id}</h2>
+			<h2 style="font-weight: bold">Bewerbung</h2>
 			<p>Datum: {bewerbung.date}</p>
 			<p>Mietername: {bewerbung.fullName}</p>
 			<p>Wohnunganschrift: {bewerbung.address}</p>

@@ -54,6 +54,8 @@
             <a href="/bewerbung/{bewerbung.id}" class="href">
             Bewerbung an: 
 			{bewerbung.address}
+            Datum:
+            {bewerbung.date}
         </a>
 		</div>
 		<div class="flex gap-1 flex-wrap">

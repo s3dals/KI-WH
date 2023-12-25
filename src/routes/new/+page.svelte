@@ -17,19 +17,23 @@
 	};
 
 	function createNote(): void {
-		function gettoday() {
-			var dt = new Date();
-            var dtd = dt.getDay();
-			var dtm = dt.getMonth();
-			var dty = dt.getFullYear();
-			return dty + '-' + dtm + '-' + dtd;
+		function formatDate() {
+			var d = new Date(),
+				month = '' + (d.getMonth() + 1),
+				day = '' + d.getDate(),
+				year = d.getFullYear();
+
+			if (month.length < 2) month = '0' + month;
+			if (day.length < 2) day = '0' + day;
+
+			return [day, month, year].join('.');
 		}
 
 		bewerbungsStore.update((notes) => [
 			...notes,
 			{
 				id: crypto.randomUUID(),
-				date: gettoday(),
+				date: formatDate(),
 				fullName,
 				address,
 				additional,

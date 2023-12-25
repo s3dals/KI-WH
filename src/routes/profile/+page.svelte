@@ -80,7 +80,7 @@
 		<span>weitere Info:</span>
 		<textarea class="textarea" rows="5" placeholder="Weitere Informationen..." bind:value={more} />
 		<!-- <InputChip   name="tags" placeholder="tags..." /> -->
-		<button type="button" on:click={updateProfile} class="btn variabt-ghost-primary self-end"
+		<button type="button" on:click={updateProfile} class="btn variabt-ghost-primary "
 			>Info aktualisieren</button
 		>
 	</form>
