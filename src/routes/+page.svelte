@@ -1,6 +1,6 @@
 <script lang="ts">
 
-	import { noteStore } from "$lib/storage";
+	import { bewerbungsStore, profileStore } from "$lib/storage";
 	import {getToastStore, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
 
 	const toastStore = getToastStore();
@@ -10,11 +10,13 @@
 	function deleteNote(noteId: string): void {
 		const confirmDelete: ModalSettings = {
 			type: 'confirm',
-			title: 'Delete Note',
-			body: 'Are you sure you want to delete this note?',
+			title: 'Bewerbung löschen',
+			body: 'Bitte das Löschen bestätigen!',
+            buttonTextCancel: 'Abrechen',
+            buttonTextConfirm: 'Bestätigen',
 			response: (r: boolean) => {
 				if (r) {
-					noteStore.update((notes) => notes.filter((n) => n.id !== noteId));
+					bewerbungsStore.update((notes) => notes.filter((n) => n.id !== noteId));
 					toastStore.trigger({
 						message: 'Note deleted successfully',
 						background: 'variant-ghost-success'
@@ -34,24 +36,28 @@
 <!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
 
 <div class="container h-full mx-auto gap-8 flex flex-col">
+{#if !$profileStore }
+<a href="/profile" class="btn variant-ghost-primary input-success">Profil-Daten vollständigen!</a>
+{/if}
+
 	<div class="flex items-center justify-between">
-		<h2 style="font-weight: bold">Bewerbungen</h2>
+		<h2 style="font-weight: bold">Die letzte Bewerbungen:</h2>
 		<a href="/new" class="btn variant-ghost-primary">Neue Bewerbung</a>
 	</div>
 </div>
 <div class="grid grid-col-3 gap-4">
-	{#each $noteStore as note}
-	<div class="card p-4 variant-ghost-warnung flex flex-col gap-2 relative">
-		<button on:click={() => deleteNote(note.id)} class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button>
-		<div>
-			{note.content}
+	{#each $bewerbungsStore.reverse() as bewerbung}
+	<div class="card p-4 flex flex-col gap-2 relative">
+		<button on:click={() => deleteNote(bewerbung.id)} class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button>
+		<div>Bewerbung an: 
+			{bewerbung.address}
 		</div>
 		<div class="flex gap-1 flex-wrap">
-			{#each note.tags as tag}
+			<!-- {#each bewerbung.tags as tag}
 			<span class="badge variant-filled-secondary">{tag}</span>
-			{/each}
+			{/each} -->
 		</div>
 	</div>
 	{/each}
 </div>
-<h1>Bitte eine Bewerbung auswählen</h1>
+<!-- <h1>Bitte eine Bewerbung auswählen</h1> -->

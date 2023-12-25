@@ -1,28 +1,37 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { noteStore } from '$lib/storage.ts';
+	import { bewerbungsStore } from '$lib/storage.ts';
     import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 
     const toastStore = getToastStore();
-    let tags: string[] = [];
-    let content: string;
+    // let tags: string[] = [];
+    let date: string;
+    let fullName: string;
+    let address: string;
+    let additional: string;
+    let application: string;
 
     const t: ToastSettings={
         message: "Note created successfully!",
         background : "variant-filled-success"
     };
 
+  
+
 
     function createNote(): void {
-        // noteStore.update((notes) => [...notes, {
-        //     id: crypto.randomUUID(),
-        //     content,
-        //     tags
-        // }]);
+        bewerbungsStore.update((notes) => [...notes, {
+            id: crypto.randomUUID(),
+            date : Date(),
+            fullName,
+            address,
+            additional,
+            application : "WIP",
+        }]);
         // content ='';
         // tags =[];
-        // toastStore.trigger(t);
-        // goto('/');
+        toastStore.trigger(t);
+        goto('/');
     }
 
 </script>
@@ -31,11 +40,11 @@
     <form class="card p-4 flex flex-col gap-3">
         <h1 style="font-weight: bold">Neue Bewerbung</h1>
         <span>Mietername:</span>
-        <input class="input" type="text" placeholder="Name.."  />
+        <input bind:value={fullName} class="input" type="text" placeholder="Name.."  />
         <span>Wohnungsanschrift:</span>
-        <input class="input" type="text" placeholder="Adress.."  />
+        <input bind:value={address} class="input" type="text" placeholder="Adress.."  />
         <span>Besonderheite der Wohnung:</span>
-        <textarea bind:value={content} class="textarea" rows="5" placeholder="Es liegt nach zur meiner Arbeitstelle, genug Räume für uns..." />
+        <textarea bind:value={additional} class="textarea" rows="5" placeholder="Es liegt nach zur meiner Arbeitstelle, genug Räume für uns..." />
         <!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
         <button type="button" on:click={createNote} class="btn variabt-ghost-primary self-end">Bewerbung erstellen</button>
     </form>
