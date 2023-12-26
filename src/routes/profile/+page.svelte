@@ -3,7 +3,6 @@
 	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	export let data: PageData;
 
-	import { goto } from '$app/navigation';
 	import { profileStore } from '$lib/storage.ts';
 
 	const toastStore = getToastStore();
@@ -60,8 +59,8 @@
 	}
 </script>
 
-<div class="container h-full mx-auto gap-8 flex flex-col">
-	<form class="card p-4 flex flex-col gap-3">
+<div class="container h-full flex flex-row mx-auto gap-8">
+	<form class="card p-4 flex flex-col gap-3 mx-auto md:basis-2/4">
 		<h2 style="font-weight: bold">Nutzer Informationen</h2>
 		<p>Dein Informationen werden für die Erstellung der Bewerbungen genutzt.</p>
 

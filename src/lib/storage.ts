@@ -14,7 +14,7 @@ type profile = {
 
 };
 
-type Bewerbungs = {
+type bewerbungs = {
     id: string;
     date: Date;
     fullName: string;
@@ -23,5 +23,15 @@ type Bewerbungs = {
     application: string;
 
 };
-export const bewerbungsStore: Writable<Bewerbungs[]> = localStorageStore('Bewerbungs', bewerbungsDemo);
+
+type settings = {
+    id: string;
+    apikey: Date;
+    mode: string;
+    lang: string;
+
+};
+
+export const bewerbungsStore: Writable<bewerbungs[]> = localStorageStore('bewerbungs', bewerbungsDemo);
 export const profileStore: Writable<profile[]> = localStorageStore('profile', false);
+export const settingsStore: Writable<settings[]> = localStorageStore('settings', false);

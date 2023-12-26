@@ -19,8 +19,6 @@
 	const drawerSettings: DrawerSettings = {
 	id: 'example-3',
 	// Provide your property overrides:
-
-
 	width: 'w-[280px] md:w-[480px]',
 	padding: 'p-4',
 	rounded: 'rounded-xl',
@@ -34,7 +32,7 @@
 <Toast position="tr" />
 <Modal />
 
-<Drawer width="500">
+<Drawer >
 	<Navigation />
 </Drawer>
 
@@ -52,7 +50,7 @@
 					</span>
 				</button>
 				<a href="/" class="href">
-				<strong class="text-xl uppercase">Wohnung mit KI</strong>
+				<strong class="text-xl uppercase">Home</strong>
 			</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
@@ -63,17 +61,16 @@
 			<!-- <svelte:fragment slot="headline">(headline)</svelte:fragment> -->
 		</AppBar>
 	</svelte:fragment>
+
+	<div class="container p-10 mx-auto">
+		<slot  />
+	</div>
+</AppShell>
+
 	<!-- <svelte:fragment slot="sidebarLeft">
 		<Navigation />
 	</svelte:fragment> -->
-	<!-- <svelte:fragment slot="sidebarRight">Sidebar Right</svelte:fragment> -->
-	<!-- <svelte:fragment slot="pageHeader">Page Header</svelte:fragment> -->
-	<!-- Router Slot -->
-	<div class="container p-10 mx-auto">
-		<slot />
-	</div>
-
-	<!-- ---- / ---- -->
+	<!-- <svelte:fragment slot="sidebarRight">Sidebar Right</svelte:fragment>
+	<svelte:fragment slot="pageHeader">Page Header</svelte:fragment> -->
 	<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment> -->
 	<!-- <svelte:fragment slot="footer">Footer</svelte:fragment> -->
-</AppShell>
