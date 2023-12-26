@@ -19,7 +19,7 @@ export function load({ params }) {
 	// const bewerbungs = currentBewerbung.find((bewerbungs) => bewerbungs.id === params.bewerbungID);
 
 	// if (!bewerbungs) throw error(404);
-		let id  = params.bewerbungID;
+		const id  = params.bewerbungID;
 	return {
 		id
 	};

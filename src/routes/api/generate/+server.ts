@@ -52,9 +52,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const prompt = stripIndent`
 	    ${oneLine`
-	    Nutze die folgende Daten und Schreibe mir eine Bewerbung-Schreiben auf eine Wohnung:
+	    Nutze alle folgenden Daten und Schreibe mir auf Deutsch eine sehr gute und lange Bewerbung-Schreiben auf eine Wohnung, die Bewerbung sollte höflich sein und garantiert eine Rückmeldung, schreibe statt meine Geburtsdatum meine alter  :
 	    `}
-	    Daten: """Mein Name: ${profielInfo.fullName.trim()} Geborn am: ${profielInfo.birth.trim()}
+	    Daten: """Mein Name: ${profielInfo.fullName.trim()} Geburtsdatum: ${profielInfo.birth.trim()}
 		Mein Job: ${profielInfo.job.trim()}
 		Mein Arbeitgeber: ${profielInfo.employer.trim()}
 		Arbeite seit: ${profielInfo.jobsince.trim()}

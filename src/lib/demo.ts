@@ -1,6 +1,6 @@
 export const bewerbungsDemo = [
 	{
-		id: '1',
+		uid: '1',
 		date: '2023-12-15',
         fullName: 'Herr Maier',
         address: 'Musterstr. 75',
@@ -8,7 +8,7 @@ export const bewerbungsDemo = [
 		application: 'Sehr geehrte Damen und Herren,\nich hoffe, diese Bewerbung erreicht Sie wohlauf. Mein Name ist. \nDerzeit bin ich auf der Suche nach einer neuen Wohnung, '
 	},
 	{
-		id: '2',
+		uid: '2',
 		date: '2023-12-17',
         fullName: 'Herr Dimi',
         address: 'Musterstr. 15',
@@ -17,7 +17,7 @@ export const bewerbungsDemo = [
 			'Sehr geehrte Damen und Herren,\nich hoffe, diese Bewerbung erreicht Sie wohlauf. Mein Name ist. \nDerzeit bin ich auf der Suche nach einer neuen Wohnung, '
 	},
     {
-		id: '3',
+		uid: '3',
 		date: '2023-12-20',
         fullName: 'Frau Müller',
         address: 'Teststr. 75',

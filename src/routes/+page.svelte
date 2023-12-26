@@ -1,4 +1,5 @@
 <script lang="ts">
+	
 	import { bewerbungsStore, profileStore } from '$lib/storage';
 	import { getToastStore, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
 
@@ -60,14 +61,15 @@
 			{/each}
 		</ul>
 	</nav> -->
+
 	{#each $bewerbungsStore.reverse() as bewerbung}
 		<div class="card p-4 variant flex-col gap-2 relative">
 			<button
-				on:click={() => deleteApp(bewerbung.id)}
+				on:click={() => deleteApp(bewerbung.uid)}
 				class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button
 			>
 			<div>
-				<a href="/bewerbung/{bewerbung.id}" class="href">
+				<a href="/bewerbung/{bewerbung.uid}" class="href">
 					Bewerbung an: {bewerbung.fullName} - Adresse: {bewerbung.address} - Datum: {bewerbung.date}
 				</a>
 			</div>

@@ -15,7 +15,7 @@ type profile = {
 };
 
 type bewerbungs = {
-    id: string;
+    uid: string;
     date: Date;
     fullName: string;
     address: string;

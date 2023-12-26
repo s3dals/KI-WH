@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let data;
 	import { goto } from '$app/navigation';
+	import { onMount, tick } from 'svelte';
 	import { bewerbungsStore, profileStore, settingsStore } from '$lib/storage.ts';
 	import {
 		InputChip,
@@ -15,9 +16,9 @@
 	const modalStore = getModalStore();
 	// let tags: string[] = [];
 	let date: string;
-	let fullName: string = 'Herr Meyer';
-	let address: string = 'Eierstr. 45';
-	let additional: string = 'Nah zur Arbeit';
+	let fullName: string;
+	let address: string;
+	let additional: string;
 	let application: string;
 
 	// const modalComponent: ModalComponent = {
@@ -30,7 +31,7 @@
 		message: 'Bewerbung ist erstellt!',
 		background: 'variant-filled-success'
 	};
-	
+
 	const tError: ToastSettings = {
 		message: 'Fehler!',
 		background: 'variant-filled-error'
@@ -55,7 +56,7 @@
 		loading = true;
 		error = false;
 		answer = '';
-		let MODE = 'not';
+		let MODE = 'no';
 		const apikey = $settingsStore[0].apikey;
 		const profielInfo = $profileStore[0];
 
@@ -69,17 +70,17 @@
 			// .then((json) => console.log(json));
 			const data = await fetchResponse.json();
 
-			// bewerbungsStore.update((notes) => [
-			// 	...notes,
-			// 	{
-			// 		id: crypto.randomUUID(),
-			// 		date: formatDate(),
-			// 		fullName,
-			// 		address,
-			// 		additional,
-			// 		application: data.application
-			// 	}
-			// ]);
+			bewerbungsStore.update((notes) => [
+				...notes,
+				{
+					uid: crypto.randomUUID(),
+					date: formatDate(),
+					fullName,
+					address,
+					additional,
+					application: data.application
+				}
+			]);
 			console.log(data);
 			loading = false;
 			toastStore.trigger(t);
@@ -96,23 +97,22 @@
 			console.log(e);
 			error = true;
 			loading = false;
-			error = JSON.parse(e.data).Error
+			error = JSON.parse(e.data).Error;
 			toastStore.trigger(tError);
 			console.log(error);
 			// alert('something went wrong');
 		});
-		
+
 		eventSoruce.addEventListener('message', (e) => {
 			try {
 				loading = false;
-				
 
 				if (e.data === '[DONE]') {
-					const createID = crypto.randomUUID()
+					const createID = crypto.randomUUID();
 					bewerbungsStore.update((notes) => [
 						...notes,
 						{
-							id: createID,
+							uid: createID,
 							date: formatDate(),
 							fullName,
 							address,
@@ -120,8 +120,7 @@
 							application: answer
 						}
 					]);
-					
-					
+
 					toastStore.trigger(t);
 					goto(`/bewerbung/${createID}`);
 					return;
@@ -131,13 +130,14 @@
 				const [{ text }] = completionResponse.choices;
 
 				if (text == '\n' && starText == 'not') {
-					console.log("waiting..")
+					console.log('waiting..');
 					console.log(completionResponse);
 				} else {
 					starText = 'start';
 				}
 				if (text !== '/n' && starText == 'start') {
 					answer = (answer ?? '') + text;
+					scrollToBottom(element);
 				}
 			} catch (err) {
 				error = true;
@@ -148,6 +148,12 @@
 		});
 	};
 	// console.log(data)
+	let element;
+	
+	onMount(() => scrollToBottom(element))
+	const scrollToBottom = async (node) => {
+    node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+  }; 
 </script>
 
 <div class="container h-full mx-auto gap-8 flex flex-col">
@@ -156,16 +162,17 @@
 		<span>Mietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />
 		<span>Wohnungsanschrift:</span>
-		<input bind:value={address} class="input" type="text" placeholder="Adress.." />
+		<input bind:value={address} class="input" type="text" placeholder="Address.." />
 		<span>Besonderheite der Wohnung:</span>
 		<textarea
 			bind:value={additional}
 			class="textarea"
 			rows="3"
-			placeholder="Es liegt nach zur meiner Arbeitstelle, genug Räume für uns..."
+			placeholder="Es liegt nah zur meiner Arbeitstelle, genug Räume für uns..."
 		/>
 		<span>Bewerbung:</span>
 		<textarea
+			bind:this={element}
 			bind:value={answer}
 			class="textarea"
 			rows="5"
