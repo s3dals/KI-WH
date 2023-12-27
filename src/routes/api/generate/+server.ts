@@ -18,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw new Error('Request data missing');
 	}
 
-	const apikey = requestData.apikey;
+	let apikey = requestData.apikey;
 
 	if(!apikey){
 		// throw new Error('OPENAI_KEY is missing');
@@ -28,6 +28,10 @@ export const POST: RequestHandler = async ({ request }) => {
 			}),
 			{ status: 401 }
 		);
+	}
+
+	if(apikey === "servertoken"){
+		apikey = OPENAI_KEY;
 	}
 	const { profielInfo } = requestData;
 
@@ -52,7 +56,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const prompt = stripIndent`
 	    ${oneLine`
-	    Nutze alle folgenden Daten und Schreibe mir auf Deutsch eine sehr gute und lange Bewerbung-Schreiben auf eine Wohnung, die Bewerbung sollte höflich sein und garantiert eine Rückmeldung, schreibe statt meine Geburtsdatum meine alter  :
+	    Nutze alle folgenden Daten und Schreibe mir auf Deutsch eine sehr gute und lange Bewerbung-Schreiben auf eine Wohnung, die Bewerbung sollte höflich sein und garantiert eine Rückmeldung, schreibe statt meine Geburtsdatum meine alter, übersetzte die fremdsprachige Daten auf Deutsch :
 	    `}
 	    Daten: """Mein Name: ${profielInfo.fullName.trim()} Geburtsdatum: ${profielInfo.birth.trim()}
 		Mein Job: ${profielInfo.job.trim()}

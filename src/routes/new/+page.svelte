@@ -1,5 +1,4 @@
 <script lang="ts">
-	export let data;
 	import { goto } from '$app/navigation';
 	import { onMount, tick } from 'svelte';
 	import { bewerbungsStore, profileStore, settingsStore } from '$lib/storage.ts';
@@ -56,37 +55,13 @@
 		loading = true;
 		error = false;
 		answer = '';
-		let MODE = 'no';
+
+		if(!$settingsStore || $profileStore){
+			toastStore.trigger(tError);
+		}
+
 		const apikey = $settingsStore[0].apikey;
 		const profielInfo = $profileStore[0];
-
-		if (MODE == 'TEST') {
-			const fetchResponse = await fetch('/api/generate', {
-				method: 'POST',
-				body: JSON.stringify({ apikey, profielInfo, fullName, address, additional }),
-				headers: { 'Content-type': 'application/json; charset=UTF-8' }
-			});
-			// .then((response) => response.json())
-			// .then((json) => console.log(json));
-			const data = await fetchResponse.json();
-
-			bewerbungsStore.update((notes) => [
-				...notes,
-				{
-					uid: crypto.randomUUID(),
-					date: formatDate(),
-					fullName,
-					address,
-					additional,
-					application: data.application
-				}
-			]);
-			console.log(data);
-			loading = false;
-			toastStore.trigger(t);
-			// goto('/');
-			return;
-		}
 
 		const eventSoruce = new SSE('/api/generate', {
 			headers: { 'Content-Type': 'application/json' },
@@ -122,7 +97,7 @@
 					]);
 
 					toastStore.trigger(t);
-					goto(`/bewerbung/${createID}`);
+					setInterval(goto(`/bewerbung/${createID}`), 2000);
 					return;
 				}
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
@@ -149,15 +124,28 @@
 	};
 	// console.log(data)
 	let element;
-	
-	onMount(() => scrollToBottom(element))
+
+	onMount(() => scrollToBottom(element));
 	const scrollToBottom = async (node) => {
-    node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
-  }; 
+		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+	};
 </script>
 
-<div class="container h-full mx-auto gap-8 flex flex-col">
-	<form on:submit|preventDefault={() => handleSubmit} class="card p-4 flex flex-col gap-3">
+
+<div class="container h-full flex flex-row mx-auto gap-8">
+	
+	<form
+		on:submit|preventDefault={() => handleSubmit}
+		class="card p-4 flex flex-col gap-3 mx-auto md:basis-3/4"
+	>
+	{#if !$profileStore}
+	<a href="/profile" class="btn variant-ghost-warning input-success"
+		>Profil-Daten vollständigen!</a
+	>
+{/if}
+{#if !$settingsStore}
+	<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
+{/if}
 		<h1 style="font-weight: bold">Neue Bewerbung</h1>
 		<span>Mietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />
@@ -180,7 +168,7 @@
 			placeholder="Der KI schreibt die Bewerbung ;)"
 		/>
 		<!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
-		<button type="button" on:click={handleSubmit} class="btn variabt-ghost-primary"
+		<button type="button" on:click={handleSubmit} class="btn variant-ghost-primary"
 			>Bewerbung erstellen</button
 		>
 	</form>

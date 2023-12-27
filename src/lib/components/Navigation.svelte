@@ -11,6 +11,7 @@
 <nav class="list-nav p-4">
     <ul>
         <li><LightSwitch bgLight='bg-surface-50' /></li>
+        <li><a href="/new" on:click={drawerClose}> Bewerbung erstellen </a> </li>
         <li><a href="/bewerbung" on:click={drawerClose}> Bewerbungen </a> </li>
         <li><a href="/profile" on:click={drawerClose}> Profile </a> </li>
         <li><a href="/settings" on:click={drawerClose}> Einstellungen </a> </li>

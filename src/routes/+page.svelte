@@ -1,6 +1,6 @@
 <script lang="ts">
 	
-	import { bewerbungsStore, profileStore } from '$lib/storage';
+	import { bewerbungsStore, profileStore, settingsStore } from '$lib/storage';
 	import { getToastStore, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
 
 	const toastStore = getToastStore();
@@ -34,11 +34,15 @@
 
 <div class="container h-full mx-auto gap-8 flex flex-col">
 	{#if !$profileStore}
-		<a href="/profile" class="btn variant-ghost-primary input-success"
+		<a href="/profile" class="btn variant-ghost-warning input-success"
 			>Profil-Daten vollständigen!</a
 		>
 	{/if}
-
+	{#if !$settingsStore}
+	<a href="/settings" class="btn variant-ghost-warning input-success"
+		>API Key hinzufügen!</a
+	>
+{/if}
 	<div class="flex items-center justify-between">
 		<h2 style="font-weight: bold">Die letzten Bewerbungen:</h2>
 		<a href="/new" class="btn variant-ghost-primary p-2">Neue Bewerbung</a>

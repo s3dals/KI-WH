@@ -50,7 +50,7 @@
 					</span>
 				</button>
 				<a href="/" class="href">
-				<strong class="text-xl uppercase">Home</strong>
+				<strong class="text-xl uppercase">Wohnungssuche</strong>
 			</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">

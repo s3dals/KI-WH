@@ -17,7 +17,7 @@
 
 	const t: ToastSettings = {
 		message: 'Die Daten sind gespeichert!',
-		background: 'variant-filled-success'
+		background: 'variant-ghost-success'
 	};
 
 	if (!$profileStore) {
@@ -79,7 +79,7 @@
 		<span>weitere Info:</span>
 		<textarea class="textarea" rows="5" placeholder="Weitere Informationen..." bind:value={more} />
 		<!-- <InputChip   name="tags" placeholder="tags..." /> -->
-		<button type="button" on:click={updateProfile} class="btn variabt-ghost-primary"
+		<button type="button" on:click={updateProfile} class="btn variant-ghost-primary"
 			>Info aktualisieren</button
 		>
 	</form>

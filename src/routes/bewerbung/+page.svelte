@@ -7,10 +7,11 @@
 		tableMapperValues,
 	} from '@skeletonlabs/skeleton';
     import { bewerbungsStore } from '$lib/storage';
-    export let data: PageData;
+    // export let data: PageData;
 
     
 	const sourceData = $bewerbungsStore;
+	
 	const tableSimple: TableSource = {
 		// A list of heading labels.
 		head: ['Name', 'Addresse', 'Datum'],
@@ -24,12 +25,11 @@
 
 	function onSelected(meta: unknown): void {
 		
-		console.log(tableMapperValues(sourceData, ['fullName', 'date', 'address', 'uid']));
-
+		// console.log(tableMapperValues(sourceData, ['fullName', 'date', 'address', 'uid']));
 		goto(`/bewerbung/${meta.detail[3]}`);
-		console.log('on:selected', meta.detail[3]);
+		// console.log('on:selected', meta.detail[3]);
 	}
 </script>
 
 <h1 class="h5 p-2">Aktuelle Bewerbungen:</h1>
-<Table interactive={true} on:selected={onSelected} source={tableSimple} />
+<Table regionHeadCell=".table-sort-dsc" interactive={true} on:selected={onSelected} source={tableSimple} />

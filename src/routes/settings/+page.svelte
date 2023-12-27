@@ -50,7 +50,7 @@
 		<!-- <input class="input" type="text" placeholder="Name.." bind:value={mode} /> -->
 		<span>OpenAI API Key:</span>
 		<input class="input" type="password" placeholder="API Key.." bind:value={apikey} />
-		<button type="button" on:click={updateProfile} class="btn variabt-ghost-primary"
+		<button type="button" on:click={updateProfile} class="btn variant-ghost-primary"
 			>Info aktualisieren</button
 		>
 	</form>
