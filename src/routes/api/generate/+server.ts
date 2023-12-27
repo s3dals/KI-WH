@@ -54,6 +54,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		// 	throw new Error('No context provided');
 		// }
 
+
+		// const prompt = "say hello world";
+
 		const prompt = stripIndent`
 	    ${oneLine`
 	    Nutze alle folgenden Daten und Schreibe mir auf Deutsch eine sehr gute und lange Bewerbung-Schreiben auf eine Wohnung, die Bewerbung sollte höflich sein und garantiert eine Rückmeldung, schreibe statt meine Geburtsdatum meine alter, übersetzte die fremdsprachige Daten auf Deutsch :
@@ -69,6 +72,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		Weitere Info über die Wohnung: ${requestData.additional.trim()}
 		"""
 	    `;
+
 		// console.log(prompt);
 		
 		// console.log(apikey);

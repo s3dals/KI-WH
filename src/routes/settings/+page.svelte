@@ -11,7 +11,7 @@
 	const toastStore = getToastStore();
 	const t: ToastSettings = {
 		message: 'Die Daten sind gespeichert!',
-		background: 'variant-filled-success'
+		background: 'variant-ghost-success'
 	};
 
 	function updateProfile(): void {

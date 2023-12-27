@@ -56,7 +56,7 @@
 		error = false;
 		answer = '';
 
-		if(!$settingsStore || $profileStore){
+		if(!$settingsStore || !$profileStore){
 			toastStore.trigger(tError);
 		}
 
