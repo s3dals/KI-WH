@@ -33,7 +33,7 @@
 			buttonTextConfirm: 'Bestätigen',
 			response: (r: boolean) => {
 				if (r) {
-					bewerbungsStore.update((notes) => notes.filter((n) => n.id !== noteId));
+					bewerbungsStore.update((notes) => notes.filter((n) => n.uid !== noteId));
 					toastStore.trigger({
 						message: 'Die Bewerbung ist gelöscht',
 						background: 'variant-ghost-success'
@@ -49,18 +49,29 @@
 		};
 		modalStore.trigger(confirmDelete);
 	}
+	function updateBewerbung(noteId: string, neueBewerbung : string): void {
+		let EditStore = $bewerbungsStore;
+		EditStore.find((bewerbungs) => bewerbungs.uid === noteId).application = neueBewerbung;
+		
+		bewerbungsStore.update((notes) => EditStore);
+		toastStore.trigger({
+			message: 'Die Bewerbung ist aktualisiert!',
+			background: 'variant-ghost-success'
+		});
+	}
 </script>
 
 {#each $bewerbungsStore.reverse() as bewerbung}
-{#if bewerbung.uid == id}
-<div class="flex items-center justify-between">
-	<h2 style="font-weight: bold">Bewerbung-Informationen:</h2>
-	<button on:click={() => deleteApp(bewerbung.uid)} class="btn btn-sm variant-filled-warning p-2"
-		>Bewerbung löschen!</button
-	>
-</div>
-<div class="container h-full mx-auto gap-2 flex flex-col">
-			<p>Datum: {bewerbung.date}</p>
+	{#if bewerbung.uid == id}
+		<div class="flex items-center justify-between">
+			<h2 style="font-weight: bold">Bewerbung-Informationen:</h2>
+			<button
+				on:click={() => deleteApp(bewerbung.uid)}
+				class="btn btn-sm variant-filled-warning p-2">Bewerbung löschen!</button
+			>
+		</div>
+		<div class="container h-full mx-auto gap-2 flex flex-col">
+			<p>Datum: {bewerbung.date} </p>
 			<p>Mietername: {bewerbung.fullName}</p>
 			<p>Wohnunganschrift: {bewerbung.address}</p>
 			<p>Besonderheiten: {bewerbung.additional}</p>
@@ -76,15 +87,20 @@
 				style="overflow-y: scroll"
 				rows="7"
 				data-clipboard="exampleInput"
-				value={bewerbung.application}
+				bind:value={bewerbung.application}
 			/>
-
 			<!-- <button
 				class="btn variant-ghost-primary"
 				on:click={copyFun}
 				use:clipboard={{ input: 'exampleInput' }}>Bewerbung kopieren</button
 			> -->
-			<a href="/new" class="btn variant-ghost-primary p-2">Bewerbung aktualiseren</a>
+			<button
+				type="button"
+				on:click={() => updateBewerbung(bewerbung.uid, bewerbung.application)}
+				class="btn variant-ghost-primary"
+			>
+				Bewerbung aktualiseren
+			</button>
 		</div>
-		{/if}
-	{/each}
+	{/if}
+{/each}
