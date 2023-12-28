@@ -11,6 +11,7 @@
 
     
 	const sourceData = $bewerbungsStore;
+	// $: sourceData = sourceData.reverse();
 	
 	const tableSimple: TableSource = {
 		// A list of heading labels.

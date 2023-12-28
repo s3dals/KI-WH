@@ -91,7 +91,6 @@ export const POST: RequestHandler = async ({ request }) => {
 			body: JSON.stringify(completionOpts)
 		});
 
-		
 
 	    if(!response.ok){
 	        const err = await response.json()

@@ -14,7 +14,20 @@ export default {
 		forms,
 		typography,
 		skeleton({
-			themes: {
+			themes: {preset: [
+				{
+					name: 'skeleton',
+					enhancements: true,
+				},
+				{
+					name: 'wintry',
+					enhancements: true,
+				},
+				{
+					name: 'crimson',
+					enhancements: true,
+				},
+			],
 				custom: [
 					myCustomTheme
 				]
