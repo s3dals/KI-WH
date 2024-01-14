@@ -101,10 +101,11 @@
 					return;
 				}
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
-
 				const [{ text }] = completionResponse.choices;
 
-				if (text == '\n' && starText == 'not') {
+				
+
+				if ( text == '\n' && starText == 'not') {
 					console.log('waiting..');
 					console.log(completionResponse);
 				} else {
