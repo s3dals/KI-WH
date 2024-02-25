@@ -3,22 +3,24 @@
 	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { auth, db } from '$lib/firebase';
 	import { profileStore } from '$lib/storage.ts';
-	import { getDocs, collection, addDoc, deleteDoc, updateDoc, doc } from 'firebase/firestore';
+	import { getDoc, collection, addDoc, deleteDoc, updateDoc, doc, setDoc } from 'firebase/firestore';
 	export let data: PageData;
 
 	// console.log(auth?.currentUser?.uid);
-	console.log(auth?.currentUser);
+	// console.log(auth?.currentUser);
 
 	const profileCollectionRef = collection(db, 'userProfile');
+	const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
 
 	const getProfile = async () => {
-		const data = await getDocs(profileCollectionRef);
-		const filteredData = data.docs.map((doc) => ({
-			...doc.data(),
-			id: doc.id
-		}));
-		console.log(filteredData);
-		return filteredData;
+
+		const data = await getDoc(profiledatabase);
+		// const filteredData = data.docs.map((doc) => ({
+		// 	...doc.data(),
+		// 	id: doc.id
+		// }));
+		console.log(data.data());
+		return data;
 	};
 	getProfile();
 
@@ -36,7 +38,8 @@
 			console.error(err);
 		}
 	};
-	onupdateProfile();
+	// onupdateProfile();
+
 	// 	const getMovieList = async () => {
 	//     //Read the data
 	//     // set the movie list equal to the data
@@ -121,6 +124,16 @@
 				more
 			}
 		]);
+		const profileData = {
+			fullName,
+				birth,
+				job,
+				employer,
+				jobsince,
+				hobbys,
+				more
+		};
+		setDoc(profiledatabase, profileData);
 		// content ='';
 		// tags =[];
 		toastStore.trigger(t);
