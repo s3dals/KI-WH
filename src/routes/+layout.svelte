@@ -1,6 +1,10 @@
 <script lang="ts">
 	// import '../theme.postcss';
 	// import '@skeletonlabs/skeleton/styles/all.css';
+	import { onMount } from 'svelte';
+	import { auth } from '$lib/firebase';
+	import { browser } from '$app/environment';
+	import { authStore } from '../stores/firestore';
 	import '../app.postcss';
 	import {
 		initializeStores,
@@ -12,17 +16,42 @@
 		Toast,
 		Modal
 	} from '@skeletonlabs/skeleton';
+	import { invalidateAll } from '$app/navigation';
 	import Navigation from '$lib/components/Navigation.svelte';
+	import Login from '$lib/components/Login.svelte';
 
 	initializeStores();
 
+	onMount(() => {
+		// authStore.update(isLoading: true)
+		// console.log($authStore);
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			authStore.update((curr) => {
+				invalidateAll();
+				return { ...curr, isLoading: false, currentUser: user };
+			});
+
+			// if (
+			// 	browser &&
+			// 	!$authStore?.currentUser &&
+			// 	!$authStore.isLoading &&
+			// 	window.location.pathname !== '/login'
+			// ) {
+			// 	window.location.href = '/login';
+			// 	console.log(authStore.currentUser, authStore.isLoading);
+			// }
+			// console.log($authStore.currentUser);
+		});
+		return unsubscribe;
+	});
+
 	const drawerSettings: DrawerSettings = {
-	id: 'example-3',
-	// Provide your property overrides:
-	width: 'w-[280px] md:w-[480px]',
-	padding: 'p-4',
-	rounded: 'rounded-xl',
-};
+		id: 'example-3',
+		// Provide your property overrides:
+		width: 'w-[280px] md:w-[480px]',
+		padding: 'p-4',
+		rounded: 'rounded-xl'
+	};
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
 		drawerStore.open(drawerSettings);
@@ -32,7 +61,7 @@
 <Toast position="tr" />
 <Modal />
 
-<Drawer >
+<Drawer>
 	<Navigation />
 </Drawer>
 
@@ -50,8 +79,8 @@
 					</span>
 				</button>
 				<a href="/" class="href">
-				<strong class="text-xl uppercase">Wohnungssuche</strong>
-			</a>
+					<strong class="text-xl uppercase">Wohnungssuche</strong>
+				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a href="/profile" class="href">
@@ -63,14 +92,20 @@
 	</svelte:fragment>
 
 	<div class="container p-10 mx-auto">
-		<slot  />
+		{#if $authStore.currentUser}
+			<slot />
+		{:else if $authStore.isLoading == true}
+			<p>Loading!</p>
+		{:else}
+			<Login />
+		{/if}
 	</div>
 </AppShell>
 
-	<!-- <svelte:fragment slot="sidebarLeft">
+<!-- <svelte:fragment slot="sidebarLeft">
 		<Navigation />
 	</svelte:fragment> -->
-	<!-- <svelte:fragment slot="sidebarRight">Sidebar Right</svelte:fragment>
+<!-- <svelte:fragment slot="sidebarRight">Sidebar Right</svelte:fragment>
 	<svelte:fragment slot="pageHeader">Page Header</svelte:fragment> -->
-	<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment> -->
-	<!-- <svelte:fragment slot="footer">Footer</svelte:fragment> -->
+<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment> -->
+<!-- <svelte:fragment slot="footer">Footer</svelte:fragment> -->

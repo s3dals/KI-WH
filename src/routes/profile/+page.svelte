@@ -28,7 +28,8 @@
 		jobsince = '';
 		hobbys = '';
 		more = '';
-		console.log('no profile');
+		// console.log('no profile');
+		
 	}else {
         fullName = $profileStore[0].fullName;
 		birth =  $profileStore[0].birth;
