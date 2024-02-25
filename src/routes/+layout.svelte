@@ -2,8 +2,8 @@
 	// import '../theme.postcss';
 	// import '@skeletonlabs/skeleton/styles/all.css';
 	import { onMount } from 'svelte';
-	import { auth } from '$lib/firebase';
 	import { browser } from '$app/environment';
+	import { auth } from '$lib/firebase';
 	import { authStore } from '../stores/firestore';
 	import '../app.postcss';
 	import {
