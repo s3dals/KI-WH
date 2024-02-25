@@ -18,7 +18,7 @@
 	} from '@skeletonlabs/skeleton';
 	import { invalidateAll } from '$app/navigation';
 	import Navigation from '$lib/components/Navigation.svelte';
-	import Login from '$lib/components/Login.svelte';
+	import Authpage from '$lib/components/Auth.svelte';
 
 	initializeStores();
 
@@ -97,7 +97,7 @@
 		{:else if $authStore.isLoading == true}
 			<p>Loading!</p>
 		{:else}
-			<Login />
+			<Authpage />
 		{/if}
 	</div>
 </AppShell>
