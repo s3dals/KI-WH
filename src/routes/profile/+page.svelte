@@ -1,10 +1,63 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	import { auth , db} from '$lib/firebase';
+	import { profileStore } from '$lib/storage.ts';
+	import { getDocs, collection, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 	export let data: PageData;
 
-	import { profileStore } from '$lib/storage.ts';
+	// console.log(auth?.currentUser?.uid);
 
+	const profileCollectionRef = collection(db, "userProfile");
+
+	const getProfile = async () => {
+	const data = await getDocs(profileCollectionRef);
+	const filteredData = data.docs.map((doc) => ({
+      ...doc.data(), 
+      id: doc.id,
+    }));
+	console.log( filteredData);
+		return filteredData;
+	};
+	getProfile()
+
+// 	const getMovieList = async () => {
+//     //Read the data
+//     // set the movie list equal to the data
+//     try {
+//     const data = await getDocs(moviesCollectionRef);
+//     const filteredData = data.docs.map((doc) => ({
+//       ...doc.data(), 
+//       id: doc.id,
+//     }));
+//     // console.log(filteredData);
+//     setMovieList(filteredData);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+// const updateMovieTitle = async (id) => {
+//     const movieDoc = doc(db, "movies", id);
+//     await updateDoc(movieDoc, {title: updatedTitle});
+//     getMovieList();
+//   };
+
+// const onSubmitMovie = async () => {
+//   try{
+//   await addDoc(moviesCollectionRef, {
+//     title: newMovieTitle, 
+//     releaseDate: newReleaseDate, 
+//     recievedAnOscar: isNewMovieOscar,
+//     userID: auth?.currentUser?.uid,
+//   });
+
+//   getMovieList();
+
+// }catch(err){
+//   console.error(err);
+// }
+// };
 	const toastStore = getToastStore();
 	// let tags: string[] = [];
 	let fullName: string;
@@ -29,7 +82,7 @@
 		hobbys = '';
 		more = '';
 		// console.log('no profile');
-		
+
 	}else {
         fullName = $profileStore[0].fullName;
 		birth =  $profileStore[0].birth;

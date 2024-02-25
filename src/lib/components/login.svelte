@@ -70,6 +70,7 @@
 			<button on:click={handleAuthenticate} type="button" class="btn variant-ghost-primary">
 				Submit
 			</button>
+			
 			<br />
 			<button on:click={google} type="button" class="btn variant-ghost-primary"> Sign in with Google </button>
 			<div>
@@ -86,6 +87,8 @@
 				{/if}
 			</div>
 		{:else}
+			<p>You are already logged in!</p>
+			
 			<button on:click={logout} type="button" class="btn variant-ghost-primary"> Signout </button>
 		{/if}
 	</form>
