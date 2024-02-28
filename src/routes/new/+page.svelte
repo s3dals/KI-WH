@@ -1,30 +1,25 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 	import { onMount, tick } from 'svelte';
-	import { bewerbungsStore, profileStore, settingsStore } from '$lib/storage.ts';
+	import { settingsStore } from '$lib/storage.ts';
 	import {
 		InputChip,
 		getToastStore,
-		type ToastSettings,
-		getModalStore
+		type ToastSettings
 	} from '@skeletonlabs/skeleton';
+	import { auth, db } from '$lib/firebase';
+	import { collection, addDoc } from 'firebase/firestore';
 	import { SSE } from 'sse.js';
 	import type { CreateCompletionResponse } from 'openai';
 
 	const toastStore = getToastStore();
-	const modalStore = getModalStore();
-	// let tags: string[] = [];
-	let date: string;
+	export let data: PageData;
+	// console.log(data.profileData);
+
 	let fullName: string;
 	let address: string;
 	let additional: string;
-	let application: string;
-
-	// const modalComponent: ModalComponent = {
-	//     ref: MyCustomComponent,
-	//     props: { background: 'bg-red-500' },
-	//     slot: '<p>Skeleton</p>'
-	// };
 
 	const t: ToastSettings = {
 		message: 'Bewerbung ist erstellt!',
@@ -51,61 +46,63 @@
 	let error = false;
 	let answer = '';
 	let starText = 'not';
+	const profielInfo = data.profileData;
+
 	const handleSubmit = async () => {
 		loading = true;
 		error = false;
 		answer = '';
 
-		if(!$settingsStore || !$profileStore){
-			toastStore.trigger(tError);
-		}
-
 		const apikey = $settingsStore[0].apikey;
-		const profielInfo = $profileStore[0];
+
+		if (!$settingsStore || !profielInfo) {
+			toastStore.trigger(tError);
+			return;
+		}
 
 		const eventSoruce = new SSE('/api/generate', {
 			headers: { 'Content-Type': 'application/json' },
 			payload: JSON.stringify({ apikey, profielInfo, fullName, address, additional })
 		});
 
-		eventSoruce.addEventListener('error', (e) => {
+		eventSoruce.addEventListener('error', (e: any) => {
 			console.log(e);
 			error = true;
 			loading = false;
 			error = JSON.parse(e.data).Error;
 			toastStore.trigger(tError);
 			console.log(error);
-			// alert('something went wrong');
 		});
 
-		eventSoruce.addEventListener('message', (e) => {
+		eventSoruce.addEventListener('message', async (e: any) => {
 			try {
 				loading = false;
 
 				if (e.data === '[DONE]') {
-					const createID = crypto.randomUUID();
-					bewerbungsStore.update((notes) => [
-						...notes,
-						{
-							uid: createID,
+					const applicationRef = collection(
+						db,
+						`applications/${auth.currentUser?.uid}/userApplications`
+					);
+					try {
+						const addApplication = await addDoc(applicationRef, {
 							date: formatDate(),
 							fullName,
 							address,
 							additional,
 							application: answer
-						}
-					]);
-
-					toastStore.trigger(t);
-					setInterval(goto(`/bewerbung/${createID}`), 2000);
+						});
+						const createID = addApplication.id;
+						toastStore.trigger(t);
+						setInterval(goto(`/bewerbung/${createID}`), 5000);
+					} catch (err) {
+						console.error(err);
+					}
 					return;
 				}
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
 				const [{ text }] = completionResponse.choices;
 
-				
-
-				if ( text == '\n' && starText == 'not') {
+				if (text == '\n' && starText == 'not') {
 					console.log('waiting..');
 					console.log(completionResponse);
 				} else {
@@ -119,34 +116,30 @@
 				error = true;
 				loading = false;
 				console.error(err);
-				// alert('something went wrong');
 			}
 		});
 	};
-	// console.log(data)
-	let element;
+	let element: any;
 
 	onMount(() => scrollToBottom(element));
-	const scrollToBottom = async (node) => {
+	const scrollToBottom = async (node: any) => {
 		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
 	};
 </script>
 
-
 <div class="container h-full flex flex-row mx-auto gap-8">
-	
 	<form
 		on:submit|preventDefault={() => handleSubmit}
 		class="card p-4 flex flex-col gap-3 mx-auto md:basis-3/4"
 	>
-	{#if !$profileStore}
-	<a href="/profile" class="btn variant-ghost-warning input-success"
-		>Profil-Daten vollständigen!</a
-	>
-{/if}
-{#if !$settingsStore}
-	<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
-{/if}
+		{#if !profielInfo}
+			<a href="/profile" class="btn variant-ghost-warning input-success"
+				>Profil-Daten vollständigen!</a
+			>
+		{/if}
+		{#if !$settingsStore}
+			<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
+		{/if}
 		<h1 style="font-weight: bold">Neue Bewerbung</h1>
 		<span>Mietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />

@@ -1,28 +1,20 @@
 import { error } from '@sveltejs/kit';
-import { bewerbungsDemo } from '$lib/demo.ts';
-import { bewerbungsStore } from "$lib/storage";
-import { localStorageStore } from "@skeletonlabs/skeleton";
-import { writable } from "svelte/store"
-import { browser } from "$app/environment"
+import type { PageLoad } from './$types';
+import { browser } from '$app/environment';
+import { auth, db } from '$lib/firebase';
+import { getDoc, doc } from 'firebase/firestore';
 
+export const load: PageLoad = async ({ params }) => {
+	if (browser) {
+		const profiledatabase = doc(
+			db,
+			`applications/${auth.currentUser.uid}/userApplications`,
+			params.bewerbungID
+		);
 
+		const application = await getDoc(profiledatabase);
+		const applicationData = application.data();
 
-
-// bewerbungsStore.subscribe((val) => {
-// 	console.log(val);
-// 	return {val}
-//   })
-
-//   let currentBewerbung = val;
-
-export function load({ params }) {
-	// const bewerbungs = currentBewerbung.find((bewerbungs) => bewerbungs.id === params.bewerbungID);
-
-	// if (!bewerbungs) throw error(404);
-		const id  = params.bewerbungID;
-	return {
-		id
-	};
-	
-
-}
+		return {profiledatabase,  applicationData };
+	}
+};

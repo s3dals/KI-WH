@@ -1,82 +1,24 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	// import type { PageData } from './$types';
 	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { auth, db } from '$lib/firebase';
-	import { profileStore } from '$lib/storage.ts';
-	import { getDoc, collection, addDoc, deleteDoc, updateDoc, doc, setDoc } from 'firebase/firestore';
-	export let data: PageData;
+	import {
+		getDoc,
+		collection,
+		addDoc,
+		deleteDoc,
+		updateDoc,
+		doc,
+		setDoc
+	} from 'firebase/firestore';
+	// export let data: PageData;
 
 	// console.log(auth?.currentUser?.uid);
 	// console.log(auth?.currentUser);
 
-	const profileCollectionRef = collection(db, 'userProfile');
+	// const profileCollectionRef = collection(db, 'userProfile');
 	const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
 
-	const getProfile = async () => {
-
-		const data = await getDoc(profiledatabase);
-		// const filteredData = data.docs.map((doc) => ({
-		// 	...doc.data(),
-		// 	id: doc.id
-		// }));
-		console.log(data.data());
-		return data;
-	};
-	getProfile();
-
-	const onupdateProfile = async () => {
-		try {
-			await addDoc(profileCollectionRef, {
-				Name: "name",
-				birthday: "1991-1-1",
-				job: "Architekt",
-				userID: auth?.currentUser?.uid
-			});
-
-			getProfile();
-		} catch (err) {
-			console.error(err);
-		}
-	};
-	// onupdateProfile();
-
-	// 	const getMovieList = async () => {
-	//     //Read the data
-	//     // set the movie list equal to the data
-	//     try {
-	//     const data = await getDocs(moviesCollectionRef);
-	//     const filteredData = data.docs.map((doc) => ({
-	//       ...doc.data(),
-	//       id: doc.id,
-	//     }));
-	//     // console.log(filteredData);
-	//     setMovieList(filteredData);
-	//     } catch (err) {
-	//       console.error(err);
-	//     }
-	//   };
-
-	// const updateMovieTitle = async (id) => {
-	//     const movieDoc = doc(db, "movies", id);
-	//     await updateDoc(movieDoc, {title: updatedTitle});
-	//     getMovieList();
-	//   };
-
-	// const onSubmitMovie = async () => {
-	//   try{
-	//   await addDoc(moviesCollectionRef, {
-	//     title: newMovieTitle,
-	//     releaseDate: newReleaseDate,
-	//     recievedAnOscar: isNewMovieOscar,
-	//     userID: auth?.currentUser?.uid,
-	//   });
-
-	//   getMovieList();
-
-	// }catch(err){
-	//   console.error(err);
-	// }
-	// };
 	const toastStore = getToastStore();
 	// let tags: string[] = [];
 	let fullName: string;
@@ -92,50 +34,53 @@
 		background: 'variant-ghost-success'
 	};
 
-	if (!$profileStore) {
-		fullName = '';
-		birth = '';
-		job = '';
-		employer = '';
-		jobsince = '';
-		hobbys = '';
-		more = '';
-		// console.log('no profile');
-	} else {
-		fullName = $profileStore[0].fullName;
-		birth = $profileStore[0].birth;
-		job = $profileStore[0].job;
-		employer = $profileStore[0].employer;
-		jobsince = $profileStore[0].jobsince;
-		hobbys = $profileStore[0].hobbys;
-		more = $profileStore[0].more;
-	}
+	const getProfile = async () => {
+		const data = await getDoc(profiledatabase);
+		// const filteredData = data.docs.map((doc) => ({
+		// 	...doc.data(),
+		// 	id: doc.id
+		// }));
+		// console.log(data.data());
+
+		const profileData = data.data();
+
+		if (!profileData) {
+			fullName = '';
+			birth = '';
+			job = '';
+			employer = '';
+			jobsince = '';
+			hobbys = '';
+			more = '';
+			// console.log('no profile');
+		} else {
+			fullName = profileData?.fullName;
+			birth = profileData?.birth;
+			job = profileData?.job;
+			employer = profileData?.employer;
+			jobsince = profileData?.jobsince;
+			hobbys = profileData?.hobbys;
+			more = profileData?.more;
+		}
+		
+		// console.log(profileData?.birth);
+		return profileData;
+	};
+
+	getProfile();
+
 
 	function updateProfile(): void {
-		profileStore.update((notes) => [
-			{
-				id: crypto.randomUUID(),
-				fullName,
-				birth,
-				job,
-				employer,
-				jobsince,
-				hobbys,
-				more
-			}
-		]);
 		const profileData = {
 			fullName,
-				birth,
-				job,
-				employer,
-				jobsince,
-				hobbys,
-				more
+			birth,
+			job,
+			employer,
+			jobsince,
+			hobbys,
+			more
 		};
 		setDoc(profiledatabase, profileData);
-		// content ='';
-		// tags =[];
 		toastStore.trigger(t);
 		// goto('/');
 	}

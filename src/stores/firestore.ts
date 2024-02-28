@@ -10,7 +10,8 @@ import { auth , googleProvider} from '../lib/firebase';
 
 export const authStore = writable({
     isLoading: true,
-    currentUser: null
+    currentUser: null,
+	name: ""
 })
 
 export const authHandlers = {

@@ -22,25 +22,21 @@
 
 	initializeStores();
 
+	let initials = '';
+	if ($authStore.currentUser) {
+		initials = $authStore?.name;
+	}
 	onMount(() => {
-		// authStore.update(isLoading: true)
-		// console.log($authStore);
+		if ($authStore.currentUser) {
+			initials = $authStore?.name;
+		}
+
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			authStore.update((curr) => {
 				invalidateAll();
-				return { ...curr, isLoading: false, currentUser: user };
+				// console.log(user);
+				return { ...curr, isLoading: false, currentUser: user, name: user?.displayName };
 			});
-
-			// if (
-			// 	browser &&
-			// 	!$authStore?.currentUser &&
-			// 	!$authStore.isLoading &&
-			// 	window.location.pathname !== '/login'
-			// ) {
-			// 	window.location.href = '/login';
-			// 	console.log(authStore.currentUser, authStore.isLoading);
-			// }
-			// console.log($authStore.currentUser);
 		});
 		return unsubscribe;
 	});
@@ -83,9 +79,11 @@
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a href="/profile" class="href">
-					<Avatar initials="SA" width="w-10" background="bg-primary-500" />
-				</a>
+				{#if $authStore.currentUser}
+					<a href="/profile" class="href">
+						<Avatar {initials} width="w-10" background="bg-primary-500" />
+					</a>
+				{/if}
 			</svelte:fragment>
 			<!-- <svelte:fragment slot="headline">(headline)</svelte:fragment> -->
 		</AppBar>

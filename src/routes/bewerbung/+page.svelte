@@ -1,27 +1,65 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
     import type { PageData } from './$types';
     import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
     import {
 		Table,
 		type TableSource,
 		tableMapperValues,
 	} from '@skeletonlabs/skeleton';
-    import { bewerbungsStore } from '$lib/storage';
-    // export let data: PageData;
+    export let data: PageData;
 
-    
-	const sourceData = $bewerbungsStore;
+	// const getProfile = async () => {
+	// 	const data = await getDoc(profiledatabase);
+	// 	// const filteredData = data.docs.map((doc) => ({
+	// 	// 	...doc.data(),
+	// 	// 	id: doc.id
+	// 	// }));
+	// 	console.log(data.data());
+
+	// 	const profileData = data.data();
+		
+	// 	// console.log(profileData?.birth);
+	// 	return profileData;
+	// };
+
+	// let sourceData = $bewerbungsStore;
+	// console.log(sourceData);
 	// $: sourceData = sourceData.reverse();
 	
+
+	// const updateMovieTitle = async (id) => {
+	//     const movieDoc = doc(db, "movies", id);
+	//     await updateDoc(movieDoc, {title: updatedTitle});
+	//     getMovieList();
+	//   };
+
+	// const onSubmitMovie = async () => {
+	//   try{
+	//   await addDoc(moviesCollectionRef, {
+	//     title: newMovieTitle,
+	//     releaseDate: newReleaseDate,
+	//     recievedAnOscar: isNewMovieOscar,
+	//     userID: auth?.currentUser?.uid,
+	//   });
+
+	//   getMovieList();
+
+	// }catch(err){
+	//   console.error(err);
+	// }
+	// };
+
 	const tableSimple: TableSource = {
 		// A list of heading labels.
 		head: ['Name', 'Addresse', 'Datum'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(sourceData, ['fullName', 'address', 'date']),
+		body: tableMapperValues(data.applicationData, ['fullName', 'address', 'date']),
 		// Optional: The data returned when interactive is enabled and a row is clicked.
-		meta: tableMapperValues(sourceData, ['fullName', 'date', 'address', 'uid']),
+		meta: tableMapperValues(data.applicationData, ['fullName', 'date', 'address', 'uid']),
 		// Optional: A list of footer labels.
-		foot: ['Total', '', `<code class="code">${sourceData.length}</code>`]
+		foot: ['Total', '', `<code class="code">${data.applicationData.length}</code>`]
 	};
 
 	function onSelected(meta: unknown): void {
