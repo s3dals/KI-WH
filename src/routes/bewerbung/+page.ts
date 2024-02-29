@@ -3,20 +3,13 @@ import { browser } from '$app/environment';
 import { auth, db } from '$lib/firebase';
 import {
     getDocs,
-    getDoc,
     collection,
-    addDoc,
-    deleteDoc,
-    updateDoc,
-    doc,
-    setDoc
 } from 'firebase/firestore';
 
 export const load = (async () => {
 
     if(browser){
-    // console.log(auth.currentUser.uid);
-    const applicationRef = collection(db, `applications/${auth.currentUser.uid}/userApplications`);
+    const applicationRef =  collection(db, `applications/${auth.currentUser.uid}/userApplications`);
 
 		const data = await getDocs(applicationRef);
 		// console.log(data.docs);

@@ -4,14 +4,14 @@ import { auth, db } from '$lib/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 
 export const load = (async () => {
-	if (browser) {
-		const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
+	if (browser ) {
+        
+        const uid = auth.currentUser.uid
+		const profiledatabase =  doc(db, 'userProfile', uid);
 		const data = await getDoc(profiledatabase);
         const profileData = data.data();
         
-		// console.log(sourceData);
-		// setMovieList(filteredData);
-
+		// console.log(profileData);
 		return { profileData };
 	}
 }) satisfies PageLoad;

@@ -19,18 +19,16 @@
 	import { invalidateAll } from '$app/navigation';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import Authpage from '$lib/components/Auth.svelte';
-
+	
+	
 	initializeStores();
 
 	let initials = '';
-	if ($authStore.currentUser) {
-		initials = $authStore?.name;
-	}
-	onMount(() => {
-		if ($authStore.currentUser) {
-			initials = $authStore?.name;
-		}
 
+	
+	$:initials = $authStore && $authStore.name;
+	onMount(() => {
+		
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			authStore.update((curr) => {
 				invalidateAll();
