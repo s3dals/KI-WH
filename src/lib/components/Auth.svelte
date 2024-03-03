@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authHandlers } from '../../stores/firestore';
+	import { authHandlers } from '../stores/firestore';
 	import { auth } from '$lib/firebase';
 
 	$: auth.currentUser;

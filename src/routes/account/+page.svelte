@@ -9,7 +9,7 @@
 		PhoneMultiFactorGenerator,
 		RecaptchaVerifier
 	} from 'firebase/auth';
-	import { authStore } from '../../stores/firestore';
+	import { authStore, verifyPhoneNumber } from '../../lib/stores/firestore';
 
 	const email: string = $authStore.currentUser?.email;
 	const emailConfirm: boolean = $authStore.currentUser?.emailVerified;
@@ -21,13 +21,22 @@
 		phoneConfirm = true;
 	}
 
-	console.log(phoneConfirm);
+	export let data: PageData;
+
+	// console.log(data);
 
 	let lang: string = 'de';
 
-	let buyTokens: string;
+	let buyTokens: number;
+	let tokensbalance: number;
 
-	console.log($authStore.currentUser);
+	// console.log(multiFactor($authStore.currentUser));
+	
+	if (data.accountBalance){
+		tokensbalance = data.accountBalance.tokens;
+	} else {
+		tokensbalance = 0;
+	}
 
 	const onSolvedRecaptcha = async () => {
 		toastStore.trigger(t);
@@ -59,30 +68,31 @@
 		background: 'variant-ghost-success'
 	};
 	function confirmPhone(): void {
-		const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-id', undefined);
-		multiFactor($authStore.currentUser)
-			.getSession()
-			.then(function (multiFactorSession) {
-				// Specify the phone number and pass the MFA session.
-				const phoneInfoOptions = {
-					phoneNumber: "+4915780937597",
-					session: multiFactorSession
-				};
+		verifyPhoneNumber($authStore.currentUser,phone,true);
+		// const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-id', undefined);
+		// multiFactor($authStore.currentUser)
+		// 	.getSession()
+		// 	.then(function (multiFactorSession) {
+		// 		// Specify the phone number and pass the MFA session.
+		// 		const phoneInfoOptions = {
+		// 			phoneNumber: "+4915780937597",
+		// 			session: multiFactorSession
+		// 		};
 
-				const phoneAuthProvider = new PhoneAuthProvider(auth);
+		// 		const phoneAuthProvider = new PhoneAuthProvider(auth);
 
-				// Send SMS verification code.
-				return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
-			})
-			.then(function (verificationId) {
-				// Ask user for the verification code. Then:
-				const cred = PhoneAuthProvider.credential(verificationId, "123456");
-				const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
+		// 		// Send SMS verification code.
+		// 		return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
+		// 	})
+		// 	.then(function (verificationId) {
+		// 		// Ask user for the verification code. Then:
+		// 		const cred = PhoneAuthProvider.credential(verificationId, "123456");
+		// 		const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
 
-				// Complete enrollment.
-				return multiFactor($authStore.currentUser).enroll(multiFactorAssertion, "phone");
-			});
-		toastStore.trigger(t);
+		// 		// Complete enrollment.
+		// 		return multiFactor($authStore.currentUser).enroll(multiFactorAssertion, "phone");
+		// 	});
+		// toastStore.trigger(t);
 		// goto('/');
 	}
 	function updateProfile(): void {
@@ -101,7 +111,7 @@
 	<div id="recaptcha-container" class="recaptcha-container"></div>
 	<form class="card p-4 flex flex-col gap-3 mx-auto basis-3/4 md:basis-2/4">
 		<h2 style="font-weight: bold">Einstellungen</h2>
-		<span>KI Tokens: 12 </span>
+		<span>KI Tokens: {tokensbalance} </span>
 		<span>Token kaufen:</span>
 		<div class="flex items-center justify-between">
 			<input disabled class="input w-2/4" type="number" placeholder="" bind:value={buyTokens} />
@@ -113,20 +123,20 @@
 		<span>Email:</span>
 		<div class="flex items-center justify-between">
 			<input class="input w-2/3" disabled type="text" placeholder={email} />
-			<button
+			<!-- <button
 				disabled={emailConfirm}
 				type="button"
 				on:click={null}
-				class="btn variant-ghost-success">Bestätigen</button
-			>
+				class="btn variant-ghost-{emailConfirm ? "success" : "primary"}">Bestätigen</button
+			> -->
 		</div>
-		<span>Mobile:</span>
+		<!-- <span>Mobile:</span>
 		<div class="flex items-center justify-between">
 			<input class="input w-2/3" type="text" placeholder="Mobile" bind:value={phone} />
 			<button type="button" on:click={confirmPhone} class="btn variant-ghost-primary"
 				>Bestätigen</button
 			>
-		</div>
+		</div> -->
 		<span>Sprache:</span>
 		<select disabled class="select flex justify-around w-2/3" bind:value={lang}>
 			<option value="de">Deutsch</option>

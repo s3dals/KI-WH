@@ -8,6 +8,7 @@
 		type TableSource,
 		tableMapperValues,
 	} from '@skeletonlabs/skeleton';
+	
     export let data: PageData;
 
 	// const getProfile = async () => {

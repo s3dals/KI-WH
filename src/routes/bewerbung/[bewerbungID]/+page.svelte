@@ -54,6 +54,7 @@
 			background: 'variant-ghost-success'
 		});
 	}
+	// console.log(data.applicationData.application.replace("\n\n", ''));
 </script>
 
 <div class="flex items-center justify-between">

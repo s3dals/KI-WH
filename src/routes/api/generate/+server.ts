@@ -18,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw new Error('Request data missing');
 	}
 
-	let apikey = requestData.apikey;
+	const apikey = OPENAI_KEY;
 
 	if(!apikey){
 		// throw new Error('OPENAI_KEY is missing');
@@ -30,9 +30,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 	}
 
-	if(apikey === "servertoken"){
-		apikey = OPENAI_KEY;
-	}
 	const { profielInfo } = requestData;
 
 	if (MODE == 'TEST') {
@@ -47,7 +44,31 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 
 	}
+	
+		// console.log(uid);
+		// console.log(db);
+		// const profiledatabase = doc(db, 'userProfile', uid);
+		// const data = await getDoc(profiledatabase);
+		// const accountBalance = data.data();
+		// const currenttokens = accountBalance.tokens;
 
+		// if (currenttokens < 1) {
+		// 	return new Response(
+		// 		JSON.stringify({
+		// 			Error: 'Es fehlt KI Tokens!'
+		// 		}),
+		// 		{ status: 401 }
+		// 	);
+		// }
+
+		// const newtokens = currenttokens - 1;
+		// const balanceData = {
+		// 	tokens: newtokens
+		// };
+
+		// setDoc(profiledatabase, balanceData);
+
+		
 		// const { context } = requestData;
 
 		// if (!context) {

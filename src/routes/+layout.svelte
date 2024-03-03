@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { auth } from '$lib/firebase';
-	import { authStore } from '../stores/firestore';
+	import { authStore, verifyIfUserIsEnrolled } from '$lib/stores/firestore';
 	import '../app.postcss';
 	import {
 		initializeStores,
@@ -19,17 +19,19 @@
 	import { invalidateAll } from '$app/navigation';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import Authpage from '$lib/components/Auth.svelte';
-	
-	
+
 	initializeStores();
 
 	let initials = '';
+	let userMFA = false;
 
-	
-	$:initials = $authStore && $authStore.name;
+	$: initials = $authStore && $authStore.name;
+
 	onMount(() => {
-		
 		const unsubscribe = auth.onAuthStateChanged((user) => {
+			if (user && verifyIfUserIsEnrolled(user)) {
+				userMFA = true;
+			}
 			authStore.update((curr) => {
 				invalidateAll();
 				// console.log(user);
@@ -89,6 +91,11 @@
 
 	<div class="container p-10 mx-auto">
 		{#if $authStore.currentUser}
+			{#if !userMFA}
+				<div class="flex items-center justify-between flex flex-col">
+					<!-- <a href="/account" class="btn variant-ghost-warning input-success">Account bestätigen!</a> -->
+				</div>
+			{/if}
 			<slot />
 		{:else if $authStore.isLoading == true}
 			<p>Loading!</p>

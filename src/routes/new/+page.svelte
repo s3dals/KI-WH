@@ -3,15 +3,12 @@
 	import type { PageData } from './$types';
 	import { onMount, tick } from 'svelte';
 	import { settingsStore } from '$lib/storage.ts';
-	import {
-		InputChip,
-		getToastStore,
-		type ToastSettings
-	} from '@skeletonlabs/skeleton';
+	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { auth, db } from '$lib/firebase';
-	import { collection, addDoc } from 'firebase/firestore';
+	import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 	import { SSE } from 'sse.js';
 	import type { CreateCompletionResponse } from 'openai';
+	import { SlideToggle } from '@skeletonlabs/skeleton';
 
 	const toastStore = getToastStore();
 	export let data: PageData;
@@ -30,6 +27,10 @@
 		message: 'Fehler!',
 		background: 'variant-filled-error'
 	};
+	const tErrorBalance: ToastSettings = {
+		message: 'Bitte KI Tokens kaufen!',
+		background: 'variant-filled-error'
+	};
 	function formatDate() {
 		var d = new Date(),
 			month = '' + (d.getMonth() + 1),
@@ -46,14 +47,63 @@
 	let error = false;
 	let answer = '';
 	let starText = 'not';
+	let useAI: boolean = true;
 	const profielInfo = data.profileData;
+
+	let tokensbalance: number;
+
+	if (data.accountBalance) {
+		tokensbalance = data.accountBalance.tokens;
+	} else {
+		tokensbalance = 0;
+	}
 
 	const handleSubmit = async () => {
 		loading = true;
 		error = false;
-		answer = '';
-
+		
 		const apikey = $settingsStore[0].apikey;
+
+		if (!useAI) {
+			const applicationRef = collection(
+				db,
+				`applications/${auth.currentUser?.uid}/userApplications`
+			);
+			try {
+				const addApplication = await addDoc(applicationRef, {
+					date: formatDate(),
+					fullName,
+					address,
+					additional,
+					application: answer
+				});
+				const createID = addApplication.id;
+				toastStore.trigger(t);
+				goto(`/bewerbung/${createID}`);
+				// setInterval(goto(`/bewerbung/${createID}`), 5000);
+			} catch (err) {
+				console.error(err);
+				error = true;
+				loading = false;
+				toastStore.trigger(tError);
+			}
+			return;
+		}
+
+		const newtokens = tokensbalance - 1;
+
+		if (newtokens < 0) {
+			error = true;
+			loading = false;
+			console.error("Keine KI Tokens!");
+			toastStore.trigger(tErrorBalance);
+			return;
+		}
+		const profiledatabase = doc(db, 'balance', auth.currentUser?.uid);
+		const balanceData = {
+			tokens: newtokens
+		};
+		setDoc(profiledatabase, balanceData);
 
 		if (!$settingsStore || !profielInfo) {
 			toastStore.trigger(tError);
@@ -62,7 +112,14 @@
 
 		const eventSoruce = new SSE('/api/generate', {
 			headers: { 'Content-Type': 'application/json' },
-			payload: JSON.stringify({ apikey, profielInfo, fullName, address, additional })
+			payload: JSON.stringify({
+				apikey,
+				profielInfo,
+				fullName,
+				address,
+				additional,
+				UID: auth.currentUser?.uid
+			})
 		});
 
 		eventSoruce.addEventListener('error', (e: any) => {
@@ -93,18 +150,23 @@
 						});
 						const createID = addApplication.id;
 						toastStore.trigger(t);
-						setInterval(goto(`/bewerbung/${createID}`), 5000);
+						goto(`/bewerbung/${createID}`);
+						// setInterval(goto(`/bewerbung/${createID}`), 5000);
 					} catch (err) {
 						console.error(err);
 					}
 					return;
 				}
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
-				const [{ text }] = completionResponse.choices;
+				let [{ text }] = completionResponse.choices;
 
-				if (text == '\n' && starText == 'not') {
+				if ( (text == '\n' || text == '\n\n') && starText == 'not') {
+					text = '/n';
+				}
+				if (text == '/n' && starText == 'not') {
+
 					console.log('waiting..');
-					console.log(completionResponse);
+					// console.log(completionResponse);
 				} else {
 					starText = 'start';
 				}
@@ -152,15 +214,19 @@
 			rows="3"
 			placeholder="Es liegt nah zur meiner Arbeitstelle, genug Räume für uns..."
 		/>
-		<span>Bewerbung:</span>
+		<span>Bewerbung: </span>
 		<textarea
 			bind:this={element}
 			bind:value={answer}
 			class="textarea"
 			rows="5"
-			disabled
-			placeholder="Der KI schreibt die Bewerbung ;)"
+			disabled={useAI}
+			placeholder={useAI ? 'Der KI schreibt die Bewerbung ;)' : 'Bewerbung'}
 		/>
+		<div class="flex p-2">
+			<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI Anschreiben
+			- Verfügbare Tokens {tokensbalance}
+		</div>
 		<!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
 		<button type="button" on:click={handleSubmit} class="btn variant-ghost-primary"
 			>Bewerbung erstellen</button

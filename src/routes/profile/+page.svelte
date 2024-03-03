@@ -1,13 +1,9 @@
 <script lang="ts">
 	// import type { PageData } from './$types';
-	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	import {  getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { auth, db } from '$lib/firebase';
 	import {
 		getDoc,
-		collection,
-		addDoc,
-		deleteDoc,
-		updateDoc,
 		doc,
 		setDoc
 	} from 'firebase/firestore';
@@ -17,8 +13,7 @@
 	// console.log(auth?.currentUser);
 
 	// const profileCollectionRef = collection(db, 'userProfile');
-	const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
-
+	
 	const toastStore = getToastStore();
 	// let tags: string[] = [];
 	let fullName: string;
@@ -28,12 +23,13 @@
 	let jobsince: string;
 	let hobbys: string;
 	let more: string;
-
+	
 	const t: ToastSettings = {
 		message: 'Die Daten sind gespeichert!',
 		background: 'variant-ghost-success'
 	};
-
+	
+	const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
 	const getProfile = async () => {
 		const data = await getDoc(profiledatabase);
 		// const filteredData = data.docs.map((doc) => ({

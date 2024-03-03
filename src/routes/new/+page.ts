@@ -8,10 +8,16 @@ export const load = (async () => {
         
         const uid = auth.currentUser.uid
 		const profiledatabase =  doc(db, 'userProfile', uid);
-		const data = await getDoc(profiledatabase);
-        const profileData = data.data();
+		const profiledata = await getDoc(profiledatabase);
+        const profileData = profiledata.data();
         
+		const balancedatabase = doc(db, 'balance', auth.currentUser.uid);
+		const balancedata = await getDoc(balancedatabase);
+
+		const accountBalance = balancedata.data();
+
+
 		// console.log(profileData);
-		return { profileData };
+		return { profileData, accountBalance };
 	}
 }) satisfies PageLoad;
