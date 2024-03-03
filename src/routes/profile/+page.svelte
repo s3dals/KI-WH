@@ -1,10 +1,19 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
-	export let data: PageData;
+	// import type { PageData } from './$types';
+	import {  getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	import { auth, db } from '$lib/firebase';
+	import {
+		getDoc,
+		doc,
+		setDoc
+	} from 'firebase/firestore';
+	// export let data: PageData;
 
-	import { profileStore } from '$lib/storage.ts';
+	// console.log(auth?.currentUser?.uid);
+	// console.log(auth?.currentUser);
 
+	// const profileCollectionRef = collection(db, 'userProfile');
+	
 	const toastStore = getToastStore();
 	// let tags: string[] = [];
 	let fullName: string;
@@ -14,46 +23,60 @@
 	let jobsince: string;
 	let hobbys: string;
 	let more: string;
-
+	
 	const t: ToastSettings = {
 		message: 'Die Daten sind gespeichert!',
 		background: 'variant-ghost-success'
 	};
+	
+	const profiledatabase = doc(db, 'userProfile', auth.currentUser.uid);
+	const getProfile = async () => {
+		const data = await getDoc(profiledatabase);
+		// const filteredData = data.docs.map((doc) => ({
+		// 	...doc.data(),
+		// 	id: doc.id
+		// }));
+		// console.log(data.data());
 
-	if (!$profileStore) {
-		fullName = '';
-		birth = '';
-		job = '';
-		employer = '';
-		jobsince = '';
-		hobbys = '';
-		more = '';
-		console.log('no profile');
-	}else {
-        fullName = $profileStore[0].fullName;
-		birth =  $profileStore[0].birth;
-		job = $profileStore[0].job;
-		employer = $profileStore[0].employer;
-		jobsince = $profileStore[0].jobsince;
-		hobbys = $profileStore[0].hobbys;
-		more = $profileStore[0].more; 
-    }
+		const profileData = data.data();
+
+		if (!profileData) {
+			fullName = '';
+			birth = '';
+			job = '';
+			employer = '';
+			jobsince = '';
+			hobbys = '';
+			more = '';
+			// console.log('no profile');
+		} else {
+			fullName = profileData?.fullName;
+			birth = profileData?.birth;
+			job = profileData?.job;
+			employer = profileData?.employer;
+			jobsince = profileData?.jobsince;
+			hobbys = profileData?.hobbys;
+			more = profileData?.more;
+		}
+		
+		// console.log(profileData?.birth);
+		return profileData;
+	};
+
+	getProfile();
+
 
 	function updateProfile(): void {
-		profileStore.update((notes) => [
-			{
-				id: crypto.randomUUID(),
-				fullName,
-				birth,
-				job,
-				employer,
-				jobsince,
-				hobbys,
-				more
-			}
-		]);
-		// content ='';
-		// tags =[];
+		const profileData = {
+			fullName,
+			birth,
+			job,
+			employer,
+			jobsince,
+			hobbys,
+			more
+		};
+		setDoc(profiledatabase, profileData);
 		toastStore.trigger(t);
 		// goto('/');
 	}

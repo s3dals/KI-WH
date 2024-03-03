@@ -1,88 +1,69 @@
 <script lang="ts">
-	
-	import { bewerbungsStore, profileStore, settingsStore } from '$lib/storage';
+	import { bewerbungsStore, settingsStore } from '$lib/storage';
 	import { getToastStore, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
+	import type { PageData } from './$types';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
-	function deleteApp(noteId: string): void {
-		const confirmDelete: ModalSettings = {
-			type: 'confirm',
-			title: 'Bewerbung löschen',
-			body: 'Bitte das Löschen bestätigen!',
-			buttonTextCancel: 'Abrechen',
-			buttonTextConfirm: 'Bestätigen',
-			response: (r: boolean) => {
-				if (r) {
-					bewerbungsStore.update((notes) => notes.filter((n) => n.id !== noteId));
-					toastStore.trigger({
-						message: 'Die Bewerbung ist gelöscht',
-						background: 'variant-ghost-success'
-					});
-					return;
-				}
-				toastStore.trigger({
-					message: 'Die Bewerbung ist nicht gelöscht',
-					background: 'variant-ghost-error'
-				});
-			}
-		};
-		modalStore.trigger(confirmDelete);
-	}
+	export let data: PageData;
+	const profielInfo = data.profileData;
+	const applicationsInfo: any = data.applicationData;
+
 </script>
 
 <div class="container h-full mx-auto gap-8 flex flex-col">
-	{#if !$profileStore}
+	{#if !profielInfo}
 		<a href="/profile" class="btn variant-ghost-warning input-success"
 			>Profil-Daten vollständigen!</a
 		>
 	{/if}
 	{#if !$settingsStore}
-	<a href="/settings" class="btn variant-ghost-warning input-success"
-		>API Key hinzufügen!</a
-	>
-{/if}
-	<div class="flex items-center justify-between">
-		<h2 style="font-weight: bold">Die letzten Bewerbungen:</h2>
+		<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
+	{/if}
+	<h2 class="h4" style="font-weight: bold">Dashboard</h2>
+	<div class="flex items-center justify-end">
+		<a href="/bewerbung/" class="btn variant-ghost-primary p-2">Bewerbungen</a>
+		&nbsp &nbsp &nbsp
 		<a href="/new" class="btn variant-ghost-primary p-2">Neue Bewerbung</a>
 	</div>
 </div>
 <br />
-<div class="grid grid-col-4 gap-4 flex">
-	<!-- <nav class="list-nav">
-		<ul>
-			{#each $bewerbungsStore.reverse() as bewerbung}
-				<li>
-					<a href="/bewerbung/{bewerbung.id}">
-						<span class="badge bg-primary-500"></span>
-						<span class="flex-auto"
-							>Bewerbung an: {bewerbung.fullName} - Adresse: {bewerbung.address} - Datum: {bewerbung.date}</span
-						>
-						<span class="btn-icon btn-icon-sm variant-filler-error">x</span>
-					</a>
-				</li>
-			{/each}
-		</ul>
-	</nav> -->
-
-	{#each $bewerbungsStore.reverse() as bewerbung}
-		<div class="card p-4 variant flex-col gap-2 relative">
-			<button
-				on:click={() => deleteApp(bewerbung.uid)}
-				class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button
-			>
-			<div>
-				<a href="/bewerbung/{bewerbung.uid}" class="href">
-					Bewerbung an: {bewerbung.fullName} - Adresse: {bewerbung.address} - Datum: {bewerbung.date}
-				</a>
-			</div>
+<div class="grid grid-cols-2 gap-4">
+	<div class="card p-4 variant flex-col gap-2 relative">
+		<button class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button
+		>
+		<div class="h5">
+			<!-- <a href="/bewerbung/" class="href">  -->
+			Nächste Besichtigung Termine:
+			<!-- </a> -->
 		</div>
-	{/each}
-</div>
+		<div>
+			<ol>
+				<li>- Termin 1 am 04.20.2024</li>
+				<li>- Termin 1 am 04.20.2024</li>
+				<li>- Termin 1 am 04.20.2024</li>
+			</ol>
+		</div>
+	</div>
 
-<style>
-	:global(button) {
-		color: aqua;
-	}
-</style>
+	<div class="card p-4 variant flex-col gap-2 relative">
+		<button class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button
+		>
+		<div class="h5">
+			<a href="/bewerbung/" class="href">Letzte Bewerbungen: </a>
+		</div>
+		<div>
+			<ol>
+				{#each applicationsInfo as applicationsInfo}
+					<li>
+						<a href="/bewerbung/{applicationsInfo.uid}" class="href">
+							- Bewerbung an {applicationsInfo.fullName} in {applicationsInfo.address}, erstellt am {applicationsInfo.date}
+
+						</a>
+					</li>
+				{/each}
+			</ol>
+		</div>
+	</div>
+</div>

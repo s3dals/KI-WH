@@ -1,40 +1,23 @@
-import { bewerbungsStore, profileStore } from "$lib/storage";
+import type { PageLoad } from './$types';
+import { browser } from '$app/environment';
+import { auth, db } from '$lib/firebase';
+import { getDoc, doc } from 'firebase/firestore';
+
+export const load = (async () => {
+	if (browser ) {
+        
+        const uid = auth.currentUser.uid
+		const profiledatabase =  doc(db, 'userProfile', uid);
+		const profiledata = await getDoc(profiledatabase);
+        const profileData = profiledata.data();
+        
+		const balancedatabase = doc(db, 'balance', auth.currentUser.uid);
+		const balancedata = await getDoc(balancedatabase);
+
+		const accountBalance = balancedata.data();
 
 
-// export const load = () =>{
-//     const fetchPosts = async () =>{
-//         const rest = new SSE('/api/generate')
-//         const data = await rest.json()
-//         return data
-//     }
-//     return {posts: fetchPosts}
-// }
-// export function addApplication(): void {
-//     function formatDate() {
-//         var d = new Date(),
-//             month = '' + (d.getMonth() + 1),
-//             day = '' + d.getDate(),
-//             year = d.getFullYear();
-
-//         if (month.length < 2) month = '0' + month;
-//         if (day.length < 2) day = '0' + day;
-
-//         return [day, month, year].join('.');
-//     }
-
-//     bewerbungsStore.update((notes) => [
-//         ...notes,
-//         {
-//             id: crypto.randomUUID(),
-//             date: formatDate(),
-//             fullName,
-//             address,
-//             additional,
-//             application: 'WIP'
-//         }
-//     ]);
-//     // content ='';
-//     // tags =[];
-//     toastStore.trigger(t);
-//     goto('/');
-// }
+		// console.log(profileData);
+		return { profileData, accountBalance };
+	}
+}) satisfies PageLoad;
