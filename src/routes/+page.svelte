@@ -18,9 +18,7 @@
 			>Profil-Daten vollständigen!</a
 		>
 	{/if}
-	{#if !$settingsStore}
-		<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
-	{/if}
+
 	<h2 class="h4" style="font-weight: bold">Dashboard</h2>
 	<div class="flex items-center justify-end">
 		<a href="/bewerbung/" class="btn variant-ghost-primary p-2">Bewerbungen</a>
