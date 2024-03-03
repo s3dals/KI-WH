@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { bewerbungsStore, settingsStore } from '$lib/storage';
 	import { getToastStore, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
 

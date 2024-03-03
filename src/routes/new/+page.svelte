@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import { onMount, tick } from 'svelte';
-	import { settingsStore } from '$lib/storage.ts';
 	import { InputChip, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { auth, db } from '$lib/firebase';
 	import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
@@ -62,7 +61,7 @@
 		loading = true;
 		error = false;
 		
-		const apikey = $settingsStore[0].apikey;
+		
 
 		if (!useAI) {
 			const applicationRef = collection(
@@ -105,7 +104,7 @@
 		};
 		setDoc(profiledatabase, balanceData);
 
-		if (!$settingsStore || !profielInfo) {
+		if (!profielInfo) {
 			toastStore.trigger(tError);
 			return;
 		}
@@ -113,7 +112,7 @@
 		const eventSoruce = new SSE('/api/generate', {
 			headers: { 'Content-Type': 'application/json' },
 			payload: JSON.stringify({
-				apikey,
+				
 				profielInfo,
 				fullName,
 				address,
@@ -199,9 +198,7 @@
 				>Profil-Daten vollständigen!</a
 			>
 		{/if}
-		{#if !$settingsStore}
-			<a href="/settings" class="btn variant-ghost-warning input-success">API Key hinzufügen!</a>
-		{/if}
+
 		<h1 style="font-weight: bold">Neue Bewerbung</h1>
 		<span>Mietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />
