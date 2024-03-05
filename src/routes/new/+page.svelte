@@ -132,7 +132,7 @@
 
 		eventSoruce.addEventListener('message', async (e: any) => {
 			try {
-				loading = false;
+				loading = true;
 
 				if (e.data === '[DONE]') {
 					const applicationRef = collection(
@@ -150,6 +150,7 @@
 						const createID = addApplication.id;
 						toastStore.trigger(t);
 						goto(`/bewerbung/${createID}`);
+						loading = false;
 						// setInterval(goto(`/bewerbung/${createID}`), 5000);
 					} catch (err) {
 						console.error(err);
@@ -225,7 +226,7 @@
 			- Verfügbare Tokens {tokensbalance}
 		</div>
 		<!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
-		<button type="button" on:click={handleSubmit} class="btn variant-ghost-primary"
+		<button type="button" on:click={handleSubmit} class="btn variant-ghost-primary" disabled={loading}
 			>Bewerbung erstellen</button
 		>
 	</form>
