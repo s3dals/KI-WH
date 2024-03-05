@@ -149,7 +149,7 @@
 		>
 		<br />
 		<br />
-		<button type="button" on:click={null} class="btn variant-filled-error">Account löschen</button>
+		<button type="button" on:click={null} class="btn variant-filled-error">Konto löschen</button>
 	</form>
 </div>
 <!-- 

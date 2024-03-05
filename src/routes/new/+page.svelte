@@ -200,7 +200,7 @@
 		{/if}
 
 		<h1 style="font-weight: bold">Neue Bewerbung</h1>
-		<span>Mietername:</span>
+		<span>Vermietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />
 		<span>Wohnungsanschrift:</span>
 		<input bind:value={address} class="input" type="text" placeholder="Address.." />
