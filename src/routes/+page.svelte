@@ -26,7 +26,7 @@
 	</div>
 </div>
 <br />
-<div class="grid grid-cols-2 gap-4">
+<div class="grid lg:grid-cols-2 sm:grid-row-2 gap-4">
 	<div class="card p-4 variant flex-col gap-2 relative">
 		<button class="btn-icon btn-icon-sm variant-filler-error absolute -top-1.5 -right-1.5">x</button
 		>
