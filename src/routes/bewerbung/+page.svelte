@@ -2,7 +2,6 @@
 	import { browser } from '$app/environment';
     import type { PageData } from './$types';
     import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
     import {
 		Table,
 		type TableSource,
