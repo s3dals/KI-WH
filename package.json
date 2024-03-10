@@ -15,7 +15,6 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@cloudflare/puppeteer": "^0.0.5",
     "@playwright/test": "^1.28.1",
     "@skeletonlabs/skeleton": "2.6.1",
     "@skeletonlabs/tw-plugin": "0.3.0",
