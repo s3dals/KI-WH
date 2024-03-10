@@ -1,7 +1,7 @@
 import { oneLine, stripIndent } from 'common-tags';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer, { Browser } from '@cloudflare/puppeteer';
 import { get } from 'svelte/store';
 import { error, type Config } from '@sveltejs/kit'
 

@@ -1,5 +1,5 @@
-import type { PageServerLoad } from './$types';
-import puppeteer, { Browser } from 'puppeteer';
+import type { PageServerLoad, Actions  } from './$types';
+import puppeteer, { Browser } from '@cloudflare/puppeteer';
 import { get } from 'svelte/store';
 
 import { websiteStore } from '$lib/storage.ts';
@@ -46,6 +46,7 @@ export const load = (async () => {
 }) satisfies PageServerLoad;
 
 export const actions = {
+
 	default: async ({ request }) => {
 		const data = await request.formData();
 		const name = data.get('name');
@@ -60,4 +61,5 @@ export const actions = {
 			url
 		};
 	}
-};
+
+}satisfies Actions;

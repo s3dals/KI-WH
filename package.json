@@ -15,6 +15,7 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
+    "@cloudflare/puppeteer": "^0.0.5",
     "@playwright/test": "^1.28.1",
     "@skeletonlabs/skeleton": "2.6.1",
     "@skeletonlabs/tw-plugin": "0.3.0",
@@ -49,7 +50,7 @@
     "common-tags": "^1.8.2",
     "firebase": "^10.7.1",
     "openai": "^4.24.1",
-    "puppeteer": "^22.4.1",
+
     "sse.js": "^2.1.0"
   }
 }
