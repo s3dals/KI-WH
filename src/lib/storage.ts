@@ -35,6 +35,7 @@ type settings = {
 type Website = {
     name: string;
     url: string;
+    results: any;
 };
 
 export const websiteStore: Writable<Website[]> = localStorageStore('searchSite', []);
