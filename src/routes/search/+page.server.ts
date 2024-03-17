@@ -22,7 +22,8 @@ export const load = (async () => {
 	};
 	return {
 		results: items,
-		table: tableload
+		table: tableload,
+		loading: false
 	};
 }) satisfies PageServerLoad;
 
@@ -41,7 +42,8 @@ export const actions = {
 		});
 		items = jsonItem;
 		return {
-			results: jsonItem
+			results: jsonItem,
+			
 		};
 	}
 } satisfies Actions;
