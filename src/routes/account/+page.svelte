@@ -27,12 +27,12 @@
 
 	let lang: string = 'de';
 
-	let buyTokens: number;
+	let buyTokens: number = 5;
 	let tokensbalance: number;
 
 	// console.log(multiFactor($authStore.currentUser));
-	
-	if (data.accountBalance){
+
+	if (data.accountBalance) {
 		tokensbalance = data.accountBalance.tokens;
 	} else {
 		tokensbalance = 0;
@@ -60,7 +60,7 @@
 		return profileData;
 	};
 
-	getProfile();
+	// getProfile();
 
 	const toastStore = getToastStore();
 	const t: ToastSettings = {
@@ -68,7 +68,7 @@
 		background: 'variant-ghost-success'
 	};
 	function confirmPhone(): void {
-		verifyPhoneNumber($authStore.currentUser,phone,true);
+		verifyPhoneNumber($authStore.currentUser, phone, true);
 		// const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-id', undefined);
 		// multiFactor($authStore.currentUser)
 		// 	.getSession()
@@ -101,7 +101,25 @@
 			phone,
 			lang
 		};
-		setDoc(accountdatabase, accountData);
+		// setDoc(accountdatabase, accountData);
+		toastStore.trigger(t);
+		// goto('/');
+	}
+	async function addTokens(event: { currentTarget: EventTarget & HTMLFormElement }): void {
+		// console.log(event);
+		// const data = new FormData(event.currentTarget);
+		// const sendBody = {"buyTokens": buyTokens }
+
+		// const response = await fetch('/api/tokens', {
+		// 	method: 'POST',
+		// 	body: JSON.stringify({
+		// 		buyTokens: buyTokens,
+		// 		auth: auth.currentUser?.accessToken
+		// 	})
+		// });
+
+		// console.log(response.body);
+		// const result: ActionResult = deserialize(await response.text());
 		toastStore.trigger(t);
 		// goto('/');
 	}
@@ -109,17 +127,26 @@
 
 <div class="container h-full flex flex-row mx-auto gap-8">
 	<div id="recaptcha-container" class="recaptcha-container"></div>
-	<form class="card p-4 flex flex-col gap-3 mx-auto basis-3/4 md:basis-2/4">
+	<div class="card p-4 flex flex-col gap-3 mx-auto basis-3/4 md:basis-2/4">
 		<h2 style="font-weight: bold">Einstellungen</h2>
-		<span>KI Tokens: {tokensbalance} </span>
-		<span>Token kaufen:</span>
-		<div class="flex items-center justify-between">
-			<input disabled class="input w-2/4" type="number" placeholder="" bind:value={buyTokens} />
-			<button disabled type="button" on:click={null} class="btn variant-ghost-primary"
-				>kaufen</button
-			>
-		</div>
+		<form method="POST">
+			<span>KI Tokens: {tokensbalance} </span>
+			<br/>
+			<span>Token kaufen:</span>
+			<div class="flex items-center justify-between">
+				<input
+					class="input w-2/4"
+					type="number"
+					name="tokencount"
+					placeholder=""
+					disabled
+					bind:value={buyTokens}
+				/>
+				<button disabled type="button" on:click={addTokens} class="btn variant-ghost-primary">kaufen</button>
+			</div>
+		</form>
 		<!-- <input class="input" type="text" placeholder="Name.." bind:value={mode} /> -->
+
 		<span>Email:</span>
 		<div class="flex items-center justify-between">
 			<input class="input w-2/3" disabled type="text" placeholder={email} />
@@ -150,7 +177,7 @@
 		<br />
 		<br />
 		<button type="button" on:click={null} class="btn variant-filled-error">Konto löschen</button>
-	</form>
+	</div>
 </div>
 <!-- 
 <style>
