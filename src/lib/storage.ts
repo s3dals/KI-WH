@@ -32,6 +32,14 @@ type settings = {
 
 };
 
+type Website = {
+    name: string;
+    url: string;
+    results: any;
+};
+
+export const websiteStore: Writable<Website[]> = localStorageStore('searchSite', []);
+
 export const bewerbungsStore: Writable<bewerbungs[]> = localStorageStore('bewerbungs', bewerbungsDemo);
 export const profileStore: Writable<profile[]> = localStorageStore('profile', false);
 export const settingsStore: Writable<settings[]> = localStorageStore('settings', false);
