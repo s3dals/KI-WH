@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { adminDB, adminAuth } from '$lib/server/firebase.server';
+// import { adminDB, adminAuth } from '$lib/server/firebase.server';
 import { auth, db } from '$lib/firebase';
 import type { createcompletionReqest } from 'openai';
 import { error, type Config } from '@sveltejs/kit';
@@ -13,14 +13,14 @@ export const POST: RequestHandler = async ({ request }) => {
 	// console.log(requestData);
 	
 
-	const uid  = await adminAuth
-		.verifyIdToken(requestData.auth)
-		.then((decodedToken) => {
-			return decodedToken.uid;
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+	// const uid  = await adminAuth
+	// 	.verifyIdToken(requestData.auth)
+	// 	.then((decodedToken) => {
+	// 		return decodedToken.uid;
+	// 	})
+	// 	.catch((error) => {
+	// 		console.log(error);
+	// 	});
 
 	// console.log(uid);
 	// const currentTokensRef = adminDB.collection('balance').doc(uid);
