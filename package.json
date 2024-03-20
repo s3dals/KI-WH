@@ -47,8 +47,10 @@
   },
   "type": "module",
   "dependencies": {
+    "cloudflare-worker-jwt": "^21.37.0",
     "common-tags": "^1.8.2",
     "firebase": "^10.7.1",
+    "firebase-cfworkers": "^1.0.2",
     "openai": "^4.24.1",
     "sse.js": "^2.1.0"
   }
