@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 	}
 
-	const { profielInfo } = requestData;
+	// const { profielInfo } = requestData;
 
 	if (MODE == 'TEST') {
 		console.log(requestData);
@@ -45,52 +45,16 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	}
 	
-		// console.log(uid);
-		// console.log(db);
-		// const profiledatabase = doc(db, 'userProfile', uid);
-		// const data = await getDoc(profiledatabase);
-		// const accountBalance = data.data();
-		// const currenttokens = accountBalance.tokens;
-
-		// if (currenttokens < 1) {
-		// 	return new Response(
-		// 		JSON.stringify({
-		// 			Error: 'Es fehlt KI Tokens!'
-		// 		}),
-		// 		{ status: 401 }
-		// 	);
-		// }
-
-		// const newtokens = currenttokens - 1;
-		// const balanceData = {
-		// 	tokens: newtokens
-		// };
-
-		// setDoc(profiledatabase, balanceData);
-
-		
-		// const { context } = requestData;
-
-		// if (!context) {
-		// 	throw new Error('No context provided');
-		// }
-
-
-		// const prompt = "say hello world";
-
+	
 		const prompt = stripIndent`
 	    ${oneLine`
-	    Nutze alle folgenden Daten und Schreibe mir auf Deutsch eine sehr gute und lange Bewerbung-Schreiben auf eine Wohnung, die Bewerbung sollte höflich sein und garantiert eine Rückmeldung, schreibe statt meine Geburtsdatum meine alter, übersetzte die fremdsprachige Daten auf Deutsch :
+	    Nutze alle folgenden Daten und Vorlage und Schreibe mir auf Deutsch eine sehr gute Bewerbung auf eine Wohnung. Die Bewerbung sollte so nah zur Bewerbungsvorlage wie möglich, übersetzte die fremdsprachige Daten auf Deutsch :
 	    `}
-	    Daten: """Mein Name: ${profielInfo.fullName.trim()} Geburtsdatum: ${profielInfo.birth.trim()}
-		Mein Job: ${profielInfo.job.trim()}
-		Mein Arbeitgeber: ${profielInfo.employer.trim()}
-		Arbeite seit: ${profielInfo.jobsince.trim()}
-		Meine Hobbies: ${profielInfo.hobbys.trim()}
-		Weite Infos über mich: ${profielInfo.more.trim()}
+	    Daten: """
 		Ich bewerbe mich auf die Wohnung in: ${requestData.address.trim()}
 		Vermieter Name ist: ${requestData.fullName.trim()}
 		Weitere Info über die Wohnung: ${requestData.additional.trim()}
+		Bewerbungsvorlage: ${requestData.answer.trim()}
 		"""
 	    `;
 
@@ -99,10 +63,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		// console.log(apikey);
 		const completionOpts: createcompletionReqest  = {
 			model: 'gpt-3.5-turbo-instruct',
-			// model: 'gpt-4-0125-preview',
 			prompt,
 			max_tokens: 1056,
-			temperature: 0.7,
+			temperature: 0.5,
 			stream: true
 		};
 		

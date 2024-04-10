@@ -13,9 +13,10 @@
 	export let data: PageData;
 	// console.log(data.profileData);
 
-	let fullName: string;
-	let address: string;
-	let additional: string;
+	let fullName: string = '';
+	let address: string= '';
+	let additional: string= '';
+	let appUrl: string= '';
 
 	const t: ToastSettings = {
 		message: 'Bewerbung ist erstellt!',
@@ -42,12 +43,12 @@
 		return [day, month, year].join('.');
 	}
 
+	const profielInfo = data.profileData;
 	let loading = false;
 	let error = false;
-	let answer = '';
+	let answer = profielInfo?.template;
 	let starText = 'not';
 	let useAI: boolean = true;
-	const profielInfo = data.profileData;
 
 	let tokensbalance: number;
 
@@ -60,41 +61,39 @@
 	const handleSubmit = async () => {
 		loading = true;
 		error = false;
-		
-		
-
-		if (!useAI) {
-			const applicationRef = collection(
-				db,
-				`applications/${auth.currentUser?.uid}/userApplications`
-			);
-			try {
-				const addApplication = await addDoc(applicationRef, {
-					date: formatDate(),
-					fullName,
-					address,
-					additional,
-					application: answer
-				});
-				const createID = addApplication.id;
-				toastStore.trigger(t);
-				goto(`/bewerbung/${createID}`);
-				// setInterval(goto(`/bewerbung/${createID}`), 5000);
-			} catch (err) {
-				console.error(err);
-				error = true;
-				loading = false;
-				toastStore.trigger(tError);
-			}
-			return;
+		const applicationRef = collection(db, `applications/${auth.currentUser?.uid}/userApplications`);
+		try {
+			const addApplication = await addDoc(applicationRef, {
+				date: formatDate(),
+				fullName,
+				address,
+				appUrl,
+				additional,
+				application: answer
+			});
+			const createID = addApplication.id;
+			toastStore.trigger(t);
+			goto(`/bewerbung/${createID}`);
+			loading = false;
+			// setInterval(goto(`/bewerbung/${createID}`), 5000);
+		} catch (err) {
+			console.error(err);
 		}
+		return;
+	};
+	
+	let element: any;
+
+	const generateTemplate = async () => {
+		loading = true;
+		error = false;
 
 		const newtokens = tokensbalance - 1;
 
 		if (newtokens < 0) {
 			error = true;
 			loading = false;
-			console.error("Keine KI Tokens!");
+			console.error('Keine KI Tokens!');
 			toastStore.trigger(tErrorBalance);
 			return;
 		}
@@ -104,23 +103,22 @@
 		};
 		setDoc(profiledatabase, balanceData);
 
-		if (!profielInfo) {
+		if (!answer || !fullName || !address || !additional) {
 			toastStore.trigger(tError);
 			return;
 		}
 
-		const eventSoruce = new SSE('/api/generate', {
+		const eventSoruce = new SSE('/api/generate/bewerbung', {
 			headers: { 'Content-Type': 'application/json' },
 			payload: JSON.stringify({
-				
-				profielInfo,
+				answer,
 				fullName,
 				address,
 				additional,
 				UID: auth.currentUser?.uid
 			})
 		});
-
+		answer = '';
 		eventSoruce.addEventListener('error', (e: any) => {
 			console.log(e);
 			error = true;
@@ -129,43 +127,41 @@
 			toastStore.trigger(tError);
 			console.log(error);
 		});
-
+		
 		eventSoruce.addEventListener('message', async (e: any) => {
 			try {
 				loading = true;
 
 				if (e.data === '[DONE]') {
-					const applicationRef = collection(
-						db,
-						`applications/${auth.currentUser?.uid}/userApplications`
-					);
-					try {
-						const addApplication = await addDoc(applicationRef, {
-							date: formatDate(),
-							fullName,
-							address,
-							additional,
-							application: answer
-						});
-						const createID = addApplication.id;
-						toastStore.trigger(t);
-						goto(`/bewerbung/${createID}`);
-						loading = false;
-						// setInterval(goto(`/bewerbung/${createID}`), 5000);
-					} catch (err) {
-						console.error(err);
-					}
-					return;
+					// const applicationRef = collection(
+					// 	db,
+					// 	`applications/${auth.currentUser?.uid}/userApplications`
+					// );
+					// try {
+					// 	const addApplication = await addDoc(applicationRef, {
+					// 		date: formatDate(),
+					// 		fullName,
+					// 		address,
+					// 		additional,
+					// 		application: answer
+					// 	});
+					// 	const createID = addApplication.id;
+					// 	toastStore.trigger(t);
+					// 	loading = false;
+					// } catch (err) {
+					// 	console.error(err);
+					// }
+					// return;
 				}
+				
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
 				let [{ text }] = completionResponse.choices;
 
-				if ( (text == '\n' || text == '\n\n') && starText == 'not') {
+				if ((text == '\n' || text == '\n\n') && starText == 'not') {
 					text = '/n';
 				}
 				if (text == '/n' && starText == 'not') {
-
-					console.log('waiting..');
+					// console.log('waiting..');
 					// console.log(completionResponse);
 				} else {
 					starText = 'start';
@@ -181,8 +177,6 @@
 			}
 		});
 	};
-	let element: any;
-
 	onMount(() => scrollToBottom(element));
 	const scrollToBottom = async (node: any) => {
 		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
@@ -201,6 +195,8 @@
 		{/if}
 
 		<h1 style="font-weight: bold">Neue Bewerbung</h1>
+		<span>Wohnung URL:</span>
+		<input bind:value={appUrl} class="input" type="text" placeholder="http://www...." />
 		<span>Vermietername:</span>
 		<input bind:value={fullName} class="input" type="text" placeholder="Name.." />
 		<span>Wohnungsanschrift:</span>
@@ -219,15 +215,25 @@
 			class="textarea"
 			rows="5"
 			disabled={useAI}
-			placeholder={useAI ? 'Der KI schreibt die Bewerbung ;)' : 'Bewerbung'}
+			placeholder={useAI ? answer : 'Bewerbung'}
 		/>
 		<div class="flex p-2">
-			<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI Anschreiben
+			<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI Bearbeitung
 			- Verfügbare Tokens {tokensbalance}
+			&nbsp;
+			<button
+				type="button"
+				disabled={!useAI}
+				on:click={generateTemplate}
+				class="btn btn-sm variant-filled-primary p-1 s-1">Vorlage mit KI anpassen</button
+			>
 		</div>
 		<!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
-		<button type="button" on:click={handleSubmit} class="btn variant-ghost-primary" disabled={loading}
-			>Bewerbung erstellen</button
+		<button
+			type="button"
+			on:click={handleSubmit}
+			class="btn variant-ghost-primary"
+			disabled={loading}>Bewerbung speichern</button
 		>
 	</form>
 </div>

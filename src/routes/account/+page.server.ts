@@ -1,6 +1,8 @@
 import type { PageServerLoad , Actions } from './$types';
+// import { adminDB, adminAuth } from '$lib/server/firebase.server';
 
 export const load = (async () => {
+	// console.log(adminDB());
     return {};
 }) satisfies PageServerLoad;
 
