@@ -133,12 +133,19 @@
 			toastStore.trigger(tErrorBalance);
 			return;
 		}
+
+		if (!profielInfo) {
+			toastStore.trigger(tError);
+			return;
+		}
+
 		
 		const profiledatabase = doc(db, 'balance', auth.currentUser?.uid);
 		const balanceData = {
 			tokens: newtokens
 		};
 		setDoc(profiledatabase, balanceData);
+		
 		tokensbalance = newtokens;
 		profielInfo = {
 			birth: birth,
@@ -151,10 +158,7 @@
 			more: more
 		};
 
-		if (!profielInfo) {
-			toastStore.trigger(tError);
-			return;
-		}
+
 		// console.log(profielInfo);
 		
 		template = '';

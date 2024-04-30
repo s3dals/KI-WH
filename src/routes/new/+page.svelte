@@ -97,16 +97,17 @@
 			toastStore.trigger(tErrorBalance);
 			return;
 		}
-		const profiledatabase = doc(db, 'balance', auth.currentUser?.uid);
-		const balanceData = {
-			tokens: newtokens
-		};
-		setDoc(profiledatabase, balanceData);
 
 		if (!answer || !fullName || !address || !additional) {
 			toastStore.trigger(tError);
 			return;
 		}
+
+		const profiledatabase = doc(db, 'balance', auth.currentUser?.uid);
+		const balanceData = {
+			tokens: newtokens
+		};
+		setDoc(profiledatabase, balanceData);
 
 		const eventSoruce = new SSE('/api/generate/bewerbung', {
 			headers: { 'Content-Type': 'application/json' },
