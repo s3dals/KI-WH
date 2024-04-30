@@ -37,9 +37,9 @@
 		</div>
 		<div>
 			<ol>
-				<li>- Termin 1 am 04.04.2024</li>
-				<li>- Termin 1 am 04.04.2024</li>
-				<li>- Termin 1 am 04.04.2024</li>
+				<li>- (BALD)</li>
+				<li>- (BALD)</li>
+				<li>- (BALD)</li>
 			</ol>
 		</div>
 	</div>

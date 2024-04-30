@@ -53,13 +53,13 @@
 
 	const tableSimple: TableSource = {
 		// A list of heading labels.
-		head: ['Name', 'Addresse', 'Datum'],
+		head: ['Mietername', 'Addresse', 'Datum' , 'Besichtigungstermin'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(data.applicationData, ['fullName', 'address', 'date']),
+		body: tableMapperValues(data.applicationData, ['fullName', 'address', 'date', ' ']),
 		// Optional: The data returned when interactive is enabled and a row is clicked.
 		meta: tableMapperValues(data.applicationData, ['fullName', 'date', 'address', 'uid']),
 		// Optional: A list of footer labels.
-		foot: ['Total', '', `<code class="code">${data.applicationData.length}</code>`]
+		foot: ['Total',  `<code class="code">${data.applicationData.length}</code>`]
 	};
 
 	function onSelected(meta: unknown): void {
