@@ -14,9 +14,9 @@
 	// console.log(data.profileData);
 
 	let fullName: string = '';
-	let address: string= '';
-	let additional: string= '';
-	let appUrl: string= '';
+	let address: string = '';
+	let additional: string = '';
+	let appUrl: string = '';
 
 	const t: ToastSettings = {
 		message: 'Bewerbung ist erstellt!',
@@ -81,7 +81,7 @@
 		}
 		return;
 	};
-	
+
 	let element: any;
 
 	const generateTemplate = async () => {
@@ -128,7 +128,7 @@
 			toastStore.trigger(tError);
 			console.log(error);
 		});
-		
+
 		eventSoruce.addEventListener('message', async (e: any) => {
 			try {
 				loading = true;
@@ -154,7 +154,7 @@
 					// }
 					// return;
 				}
-				
+
 				const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
 				let [{ text }] = completionResponse.choices;
 
@@ -218,22 +218,26 @@
 			disabled={useAI}
 			placeholder={useAI ? answer : 'Bewerbung'}
 		/>
-		<div class="flex p-2">
-			<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI Bearbeitung
-			- Verfügbare Tokens {tokensbalance}
-			&nbsp;
-			<button
-				type="button"
-				disabled={!useAI}
-				on:click={generateTemplate}
-				class="btn btn-sm variant-filled-primary p-1 s-1">Vorlage mit KI anpassen</button
-			>
+		<div class="flex   grid lg:grid-cols-2 sm:grid-row-2 p-2">
+			<div class="flex justify-start p-2">
+				<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI
+				Bearbeitung -  Verfügbare Tokens {tokensbalance}
+			</div>
+			<div class="flex p-1">
+				
+				<button
+					type="button"
+					disabled={!useAI}
+					on:click={generateTemplate}
+					class="btn btn-sm variant-filled-primary p-1 max-h-8">Vorlage mit KI anpassen</button
+				>
+			</div>
 		</div>
 		<!-- <InputChip bind:value={tags}  name="tags" placeholder="tags..." /> -->
 		<button
 			type="button"
 			on:click={handleSubmit}
-			class="btn variant-ghost-primary"
+			class="btn variant-ghost-primary "
 			disabled={loading}>Bewerbung speichern</button
 		>
 	</form>
