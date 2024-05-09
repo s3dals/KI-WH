@@ -65,7 +65,7 @@
 	//   installApp: true,
 	//   minimumVersion: '12'
 	// },
-	// dynamicLinkDomain: 'http://localhost:5173/'
+	dynamicLinkDomain: 'https://app.ai-bewerben.de'
   };
 </script>
 
