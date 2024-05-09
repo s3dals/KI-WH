@@ -1,8 +1,22 @@
 <script lang="ts">
 	import { authHandlers } from '../stores/firestore';
 	import { auth } from '$lib/firebase';
+	import {
+		getToastStore,
+		type ToastSettings,
+		Accordion,
+		AccordionItem,
+		SlideToggle
+	} from '@skeletonlabs/skeleton';
+
 
 	$: auth.currentUser;
+
+	const tError: ToastSettings = {
+		message: 'Fehler!',
+		background: 'variant-filled-error'
+	};
+	const toastStore = getToastStore();
 
 	let email: string = '';
 	let password: string = '';
@@ -45,11 +59,24 @@
 	}
 
 	let emailsent = false;
-
 	async function emailLink() {
-		await authHandlers.signInWithEmailLink(auth, email, actionCodeSettings);
-		window.localStorage.setItem('emailForSignIn', email);
-		emailsent = true;
+		try {
+			const sendemail = await authHandlers.signInWithEmailLink(auth, email, actionCodeSettings);
+			
+			if (sendemail == false) {
+				error = true;
+				authenticating = false;
+				toastStore.trigger(tError);
+			
+			}
+			window.localStorage.setItem('emailForSignIn', email);
+			emailsent = true;
+
+		} catch (err) {
+			console.log('There was an auth error', err);
+			error = true;
+			authenticating = false;
+		}
 	}
 
 	const actionCodeSettings = {
@@ -93,7 +120,7 @@
 				Sign in with Email
 			</button>
 			{#if register}
-				<h3> Emai is sent! </h3>
+				<h3>Emai is sent!</h3>
 			{/if}
 
 			<!-- <button on:click={handleAuthenticate} type="button" class="btn variant-ghost-primary">

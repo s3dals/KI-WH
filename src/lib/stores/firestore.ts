@@ -8,7 +8,6 @@ import {
 	PhoneAuthProvider,
 	getAuth,
 	sendSignInLinkToEmail
-
 } from 'firebase/auth';
 // import  {User} from '@firebase/auth-types';
 import { writable } from 'svelte/store';
@@ -21,31 +20,29 @@ export const authStore = writable({
 });
 
 export async function verifyPhoneNumber(
-    user,
-    phoneNumber: string,
-    recaptchaVerifier
+	user,
+	phoneNumber: string,
+	recaptchaVerifier
 ): Promise<false | string> {
-    const session = await multiFactor(user).getSession();
-    const phoneInfoOptions = {
-        phoneNumber,
-        session
-    }
+	const session = await multiFactor(user).getSession();
+	const phoneInfoOptions = {
+		phoneNumber,
+		session
+	};
 
-    const phoneAuthProvider = new PhoneAuthProvider(auth);
-    try {
-        return await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
-    }catch (e) {
-        return false;
-    }
+	const phoneAuthProvider = new PhoneAuthProvider(auth);
+	try {
+		return await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
+	} catch (e) {
+		return false;
+	}
 }
 
-export  function verifyIfUserIsEnrolled(user) {
-    const enrolledFactors = multiFactor(user).enrolledFactors;
-    return enrolledFactors.length > 0;
+export function verifyIfUserIsEnrolled(user) {
+	const enrolledFactors = multiFactor(user).enrolledFactors;
+	return enrolledFactors.length > 0;
 }
 
-
-  
 export const authHandlers = {
 	signup: async (email: string, pass: string) => {
 		const newUserCredintail = await createUserWithEmailAndPassword(auth, email, pass);
@@ -62,22 +59,12 @@ export const authHandlers = {
 	},
 
 	signInWithEmailLink: async (auth, email: string, actionCodeSettings) => {
-
-		sendSignInLinkToEmail(auth, email, actionCodeSettings)
-		.then(() => {
-			// The link was successfully sent. Inform the user.
-			// Save the email locally so you don't need to ask the user for it again
-			// if they open the link on the same device.
-			// ...
-		  }) .catch((error) => {
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			// ...
-		  });
-	},
-
-
-
+		try {
+			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+		} catch (e) {
+			return false;
+		}
+	}
 };
 
 // resetPassword: async (email) => {
