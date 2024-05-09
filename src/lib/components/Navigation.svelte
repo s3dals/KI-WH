@@ -21,7 +21,7 @@
     <ul>
         <li><LightSwitch bgLight='bg-surface-50' /></li>
         {#if auth.currentUser}
-        <li><a href="/search" on:click={drawerClose}> Suche (BETA) </a> </li>
+        <!-- <li><a href="/search" on:click={drawerClose}> Suche (BETA) </a> </li> -->
         <li><a href="/new" on:click={drawerClose}> Bewerbung erstellen </a> </li>
         <li><a href="/bewerbung" on:click={drawerClose}> Bewerbungen </a> </li>
         <li><a href="/profile" on:click={drawerClose}> Profile </a> </li>

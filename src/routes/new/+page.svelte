@@ -218,7 +218,7 @@
 			disabled={useAI}
 			placeholder={useAI ? answer : 'Bewerbung'}
 		/>
-		<div class="flex   grid lg:grid-cols-2 sm:grid-row-2 p-2">
+		<div class="flex justify-between  grid lg:grid-cols-2 sm:grid-row-2 p-2">
 			<div class="flex justify-start p-2">
 				<SlideToggle name="slide" bind:checked={useAI} active="bg-primary-500" size="sm" /> &nbsp; KI
 				Bearbeitung -  Verfügbare Tokens {tokensbalance}

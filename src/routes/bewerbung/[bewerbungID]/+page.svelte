@@ -7,7 +7,7 @@
 		type ModalSettings,
 		getModalStore,
 		Accordion,
-		AccordionItem,
+		AccordionItem
 	} from '@skeletonlabs/skeleton';
 	import { deleteDoc, updateDoc } from 'firebase/firestore';
 	import { goto } from '$app/navigation';
@@ -48,8 +48,22 @@
 		};
 		modalStore.trigger(confirmDelete);
 	}
-	async function updateBewerbung(neueBewerbung: string): Promise<void> {
-		await updateDoc(data.profiledatabase, { application: neueBewerbung });
+
+	async function updateBewerbung(
+		neueBewerbung: string,
+		meeting: Date,
+		note: string
+	): Promise<void> {
+
+		const epoche =  Date.parse( meeting );
+
+
+		await updateDoc(data.profiledatabase, {
+			application: neueBewerbung,
+			meeting,
+			note,
+			epoche
+		});
 
 		toastStore.trigger({
 			message: 'Die Bewerbung ist aktualisiert!',
@@ -84,22 +98,42 @@
 		data-clipboard="exampleInput"
 		bind:value={data.applicationData.application}
 	/>
-	<button
-		type="button"
-		on:click={() => updateBewerbung(data.applicationData.application)}
-		class="btn variant-ghost-primary"
-	>
-		Bewerbung aktualiseren
-	</button>
-
 	<Accordion>
-		<AccordionItem >
+		<AccordionItem>
 			<svelte:fragment slot="lead">⏲️</svelte:fragment>
 			<svelte:fragment slot="summary"
 				><h2 style="font-weight: bold">Termin ist vereinbart?</h2></svelte:fragment
 			>
 			<svelte:fragment slot="content">
-				</svelte:fragment>
+				<div class="flex flex-col gap-3 mx-auto md:basis-2/4">
+					<span>Beischtigungstermin am:</span>
+					<input
+						class="input"
+						type="date"
+						placeholder="Datum.."
+						bind:value={data.applicationData.meeting}
+					/>
+					<span>Hinsweis:</span>
+					<input
+						class="input"
+						type="text"
+						placeholder="Bei Mustermann klingen, 1.OG links.."
+						bind:value={data.applicationData.note}
+					/>
+				</div></svelte:fragment
+			>
 		</AccordionItem>
 	</Accordion>
+	<button
+		type="button"
+		on:click={() =>
+			updateBewerbung(
+				data.applicationData.application,
+				data.applicationData.meeting,
+				data.applicationData.note
+			)}
+		class="btn variant-ghost-primary"
+	>
+		Bewerbung aktualiseren
+	</button>
 </div>
