@@ -3,7 +3,6 @@
 	import { auth } from '$lib/firebase';
 
 	$: auth.currentUser;
-	// console.log(auth.currentUser);
 
 	let email: string = '';
 	let password: string = '';
@@ -47,6 +46,27 @@
 	async function google() {
 		await authHandlers.signInWithGoogle();
 	}
+
+	async function emailLink() {
+		await authHandlers.signInWithEmailLink(auth, email, actionCodeSettings);
+	}
+
+	const actionCodeSettings = {
+	// URL you want to redirect back to. The domain (www.example.com) for this
+	// URL must be in the authorized domains list in the Firebase Console.
+	url: 'https://app.ai-bewerben.de/login',
+	// This must be true.
+	handleCodeInApp: true,
+	// iOS: {
+	//   bundleId: 'com.example.ios'
+	// },
+	// android: {
+	//   packageName: 'com.example.android',
+	//   installApp: true,
+	//   minimumVersion: '12'
+	// },
+	// dynamicLinkDomain: 'http://localhost:5173/'
+  };
 </script>
 
 <div class="container h-full flex flex-col mx-auto gap-8">
@@ -57,24 +77,29 @@
 				Email:
 				<input bind:value={email} class="input" type="email" placeholder="Email" />
 			</label>
-			<label>
+			<!-- <label>
 				password:
 				<input bind:value={password} class="input" type="password" placeholder="Password" />
-			</label>
+			</label> -->
 			{#if register}
 				<label>
 					confirm:
 					<input bind:value={confirmPass} class="input" type="password" placeholder="Password" />
 				</label>
 			{/if}
-			<button on:click={handleAuthenticate} type="button" class="btn variant-ghost-primary">
-				Submit
+
+			<button on:click={emailLink} type="button" class="btn variant-ghost-primary">
+				email link
 			</button>
+
+			<!-- <button on:click={handleAuthenticate} type="button" class="btn variant-ghost-primary">
+				Submit
+			</button> -->
 			
 			<br />
 			<button on:click={google} type="button" class="btn variant-ghost-primary"> Sign in with Google </button>
 			<div>
-				{#if register}
+				<!-- {#if register}
 					<div>
 						<p>Already have an account?</p>
 						<a href="/login#" on:click={handleRegister} on:keydown={() => {}}>Login</a>
@@ -84,7 +109,7 @@
 						<p>Don't have an account?</p>
 						<a href="/login#" on:click={handleRegister} on:keydown={() => {}}>Register</a>
 					</div>
-				{/if}
+				{/if} -->
 			</div>
 		{:else}
 			<p>You are already logged in!</p>

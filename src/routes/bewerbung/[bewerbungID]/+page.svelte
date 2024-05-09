@@ -5,7 +5,9 @@
 		getToastStore,
 		clipboard,
 		type ModalSettings,
-		getModalStore
+		getModalStore,
+		Accordion,
+		AccordionItem,
 	} from '@skeletonlabs/skeleton';
 	import { deleteDoc, updateDoc } from 'firebase/firestore';
 	import { goto } from '$app/navigation';
@@ -89,4 +91,15 @@
 	>
 		Bewerbung aktualiseren
 	</button>
+
+	<Accordion>
+		<AccordionItem >
+			<svelte:fragment slot="lead">⏲️</svelte:fragment>
+			<svelte:fragment slot="summary"
+				><h2 style="font-weight: bold">Termin ist vereinbart?</h2></svelte:fragment
+			>
+			<svelte:fragment slot="content">
+				</svelte:fragment>
+		</AccordionItem>
+	</Accordion>
 </div>
