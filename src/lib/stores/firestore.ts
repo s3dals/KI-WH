@@ -7,7 +7,7 @@ import {
 	signInWithPopup,
 	PhoneAuthProvider,
 	getAuth,
-	 sendSignInLinkToEmail
+	sendSignInLinkToEmail
 
 } from 'firebase/auth';
 // import  {User} from '@firebase/auth-types';
