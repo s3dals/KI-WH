@@ -51,13 +51,17 @@
 
 	async function updateBewerbung(
 		neueBewerbung: string,
-		meeting: Date,
+		meeting: string,
 		note: string
 	): Promise<void> {
+		const epoche = Date.parse(meeting);
 
-		const epoche =  Date.parse( meeting );
-
-
+		if (!meeting) {
+			meeting = ""
+		}
+		if (!note) {
+			note = ""
+		}
 		await updateDoc(data.profiledatabase, {
 			application: neueBewerbung,
 			meeting,
@@ -71,6 +75,12 @@
 		});
 	}
 	// console.log(data.applicationData.application.replace("\n\n", ''));
+
+	const meetingTrue = data.applicationData.meeting
+	let open = ""
+	if (meetingTrue){
+		open= "open"
+	}
 </script>
 
 <div class="flex items-center justify-between">
@@ -99,7 +109,7 @@
 		bind:value={data.applicationData.application}
 	/>
 	<Accordion>
-		<AccordionItem>
+		<AccordionItem {open} >
 			<svelte:fragment slot="lead">⏲️</svelte:fragment>
 			<svelte:fragment slot="summary"
 				><h2 style="font-weight: bold">Termin ist vereinbart?</h2></svelte:fragment
