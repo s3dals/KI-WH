@@ -24,11 +24,9 @@
 		try {
 			if (!register) {
 				await authHandlers.login(email, password);
-	
 			} else {
 				// console.log('sign up');
 				await authHandlers.signup(email, password);
-		
 			}
 		} catch (err) {
 			console.log('There was an auth error', err);
@@ -41,32 +39,35 @@
 	}
 	async function logout() {
 		await authHandlers.logout();
-
 	}
 	async function google() {
 		await authHandlers.signInWithGoogle();
 	}
 
+	let emailsent = false;
+
 	async function emailLink() {
 		await authHandlers.signInWithEmailLink(auth, email, actionCodeSettings);
+		window.localStorage.setItem('emailForSignIn', email);
+		emailsent = true;
 	}
 
 	const actionCodeSettings = {
-	// URL you want to redirect back to. The domain (www.example.com) for this
-	// URL must be in the authorized domains list in the Firebase Console.
-	url: 'https://app.ai-bewerben.de/login',
-	// This must be true.
-	handleCodeInApp: true,
-	// iOS: {
-	//   bundleId: 'com.example.ios'
-	// },
-	// android: {
-	//   packageName: 'com.example.android',
-	//   installApp: true,
-	//   minimumVersion: '12'
-	// },
-	dynamicLinkDomain: 'https://app.ai-bewerben.de'
-  };
+		// URL you want to redirect back to. The domain (www.example.com) for this
+		// URL must be in the authorized domains list in the Firebase Console.
+		url: 'https://app.ai-bewerben.de/login',
+		// This must be true.
+		handleCodeInApp: true
+		// iOS: {
+		//   bundleId: 'com.example.ios'
+		// },
+		// android: {
+		//   packageName: 'com.example.android',
+		//   installApp: true,
+		//   minimumVersion: '12'
+		// },
+		// dynamicLinkDomain: 'https://app.ai-bewerben.de'
+	};
 </script>
 
 <div class="container h-full flex flex-col mx-auto gap-8">
@@ -89,15 +90,20 @@
 			{/if}
 
 			<button on:click={emailLink} type="button" class="btn variant-ghost-primary">
-				email link
+				Sign in with Email
 			</button>
+			{#if register}
+				<h3> Emai is sent! </h3>
+			{/if}
 
 			<!-- <button on:click={handleAuthenticate} type="button" class="btn variant-ghost-primary">
 				Submit
 			</button> -->
-			
+
 			<br />
-			<button on:click={google} type="button" class="btn variant-ghost-primary"> Sign in with Google </button>
+			<button on:click={google} type="button" class="btn variant-ghost-primary">
+				Sign in with Google
+			</button>
 			<div>
 				<!-- {#if register}
 					<div>
@@ -113,7 +119,7 @@
 			</div>
 		{:else}
 			<p>You are already logged in!</p>
-			
+
 			<button on:click={logout} type="button" class="btn variant-ghost-primary"> Signout </button>
 		{/if}
 	</form>
