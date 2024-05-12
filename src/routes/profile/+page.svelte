@@ -22,15 +22,15 @@
 
 	const toastStore = getToastStore();
 	// let tags: string[] = [];
-	let fullName: string= '';
-	let birth: string= '';
-	let job: string= '';
-	let employer: string= '';
-	let jobsince: string= '';
-	let sallery: string= '';
-	let hobbys: string= '';
-	let more: string= '';
-	let template: string= '';
+	let fullName: string = '';
+	let birth: string = '';
+	let job: string = '';
+	let employer: string = '';
+	let jobsince: string = '';
+	let sallery: string = '';
+	let hobbys: string = '';
+	let more: string = '';
+	let template: string = '';
 
 	let useAI: boolean = true;
 
@@ -113,14 +113,13 @@
 	let loading = false;
 	let error = false;
 	let starText = 'not';
-	let profielInfo ;
+	let profielInfo;
 
 	const generateTemplate = async () => {
 		loading = true;
 		error = false;
-		
-		if (!useAI) {
 
+		if (!useAI) {
 			return;
 		}
 
@@ -134,18 +133,12 @@
 			return;
 		}
 
-		if (!profielInfo) {
-			toastStore.trigger(tError);
-			return;
-		}
-
-		
 		const profiledatabase = doc(db, 'balance', auth.currentUser?.uid);
 		const balanceData = {
 			tokens: newtokens
 		};
 		setDoc(profiledatabase, balanceData);
-		
+
 		tokensbalance = newtokens;
 		profielInfo = {
 			birth: birth,
@@ -158,9 +151,14 @@
 			more: more
 		};
 
+		if (!profielInfo) {
+			console.log('profile info missing');
+			toastStore.trigger(tError);
+			return;
+		}
 
 		// console.log(profielInfo);
-		
+
 		template = '';
 		const eventSoruce = new SSE('/api/generate/template', {
 			headers: { 'Content-Type': 'application/json' },
@@ -184,24 +182,10 @@
 				loading = true;
 
 				if (e.data === '[DONE]') {
-					// const applicationRef = collection(
-					// 	db,
-					// 	`applications/${auth.currentUser?.uid}/userApplications`
-					// );
 					try {
-						// const addApplication = await addDoc(applicationRef, {
-						// 	date: formatDate(),
-						// 	fullName,
-						// 	address,
-						// 	additional,
-						// 	application: answer
-						// });
-						// const createID = addApplication.id;
-						// toastStore.trigger(t);
 						updateProfile();
-						// goto(`/bewerbung/${createID}`);
+
 						loading = false;
-						// setInterval(goto(`/bewerbung/${createID}`), 5000);
 					} catch (err) {
 						console.error(err);
 					}
@@ -240,7 +224,7 @@
 <div class="container h-full flex flex-row mx-auto gap-6">
 	<form class="card p-2 flex flex-col gap-3 mx-auto md:basis-2/4">
 		<Accordion>
-			<AccordionItem >
+			<AccordionItem>
 				<svelte:fragment slot="lead">👤</svelte:fragment>
 				<svelte:fragment slot="summary"
 					><h2 style="font-weight: bold">Nutzer Informationen</h2></svelte:fragment
@@ -273,7 +257,7 @@
 					</div>
 				</svelte:fragment>
 			</AccordionItem>
-			<AccordionItem >
+			<AccordionItem>
 				<svelte:fragment slot="lead">📄</svelte:fragment>
 				<svelte:fragment slot="summary">Bewerbungsvorlage</svelte:fragment>
 				<svelte:fragment slot="content">
