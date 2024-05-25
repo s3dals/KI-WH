@@ -53,9 +53,9 @@
 
 	const tableSimple: TableSource = {
 		// A list of heading labels.
-		head: ['Mietername', 'Addresse', 'Datum' , 'Besichtigungstermin'],
+		head: ['Vermieter', 'Addresse', 'Bewerbungsdatum' , 'Besichtigungstermin'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(data.applicationData, ['fullName', 'address', 'date', ' ']),
+		body: tableMapperValues(data.applicationData, ['fullName', 'address', 'date', 'meeting']),
 		// Optional: The data returned when interactive is enabled and a row is clicked.
 		meta: tableMapperValues(data.applicationData, ['fullName', 'date', 'address', 'uid']),
 		// Optional: A list of footer labels.

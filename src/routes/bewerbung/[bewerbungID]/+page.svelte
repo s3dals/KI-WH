@@ -92,7 +92,8 @@
 <div class="container h-full mx-auto gap-2 flex flex-col">
 	<p>Datum: {data.applicationData?.date}</p>
 	<p>Mietername: {data.applicationData?.fullName}</p>
-	<p>Wohnunganschrift: {data.applicationData?.address}</p>
+	<a href="{data.applicationData?.appUrl}" target="_blank">
+	<p>Wohnunganschrift: {data.applicationData?.address}</p>  </a>
 	<p>Besonderheiten: {data.applicationData?.additional}</p>
 	<p>
 		Die Bewerbung: <button
@@ -119,7 +120,7 @@
 					<span>Beischtigungstermin am:</span>
 					<input
 						class="input"
-						type="date"
+						type="datetime-local"
 						placeholder="Datum.."
 						bind:value={data.applicationData.meeting}
 					/>
