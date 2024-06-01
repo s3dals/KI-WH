@@ -5,8 +5,8 @@ import { getDoc, doc } from 'firebase/firestore';
 
 export const load = (async () => {
 	if (browser ) {
-        
-        const uid = auth.currentUser.uid
+        await auth.authStateReady();
+        const uid = auth.currentUser?.uid
 		const profiledatabase =  doc(db, 'userProfile', uid);
 		const profiledata = await getDoc(profiledatabase);
         const profileData = profiledata.data();

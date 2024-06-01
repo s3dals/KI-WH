@@ -31,13 +31,14 @@
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
+
 			if (user && verifyIfUserIsEnrolled(user)) {
 				userMFA = true;
 			}
 			authStore.update((curr) => {
 				invalidateAll();
 				// console.log(user);
-				return { ...curr, isLoading: false, currentUser: user, name: user?.displayName };
+				return { ...curr, isLoading: false, currentUser: user, name: user?.displayName, uid: auth.currentUser.uid };
 			});
 		});
 		return unsubscribe;

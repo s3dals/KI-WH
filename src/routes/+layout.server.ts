@@ -5,5 +5,6 @@ export const ssr = false;
 export const load: LayoutServerLoad = (async () => {
     // console.log(authStore);
     
+    
     return { };
 }) satisfies LayoutServerLoad;

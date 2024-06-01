@@ -4,20 +4,18 @@ import { auth, db } from '$lib/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 
 export const load = (async () => {
-	if (browser ) {
-        
-        const uid = auth.currentUser.uid
+	if (browser) {
+		await auth.authStateReady();
 		// const profiledatabase =  doc(db, 'userProfile', uid);
 		// const profiledata = await getDoc(profiledatabase);
-        // const profileData = profiledata.data();
-        
+		// const profileData = profiledata.data();
+
 		const balancedatabase = doc(db, 'balance', auth.currentUser.uid);
 		const balancedata = await getDoc(balancedatabase);
 
 		const accountBalance = balancedata.data();
 
-
 		// console.log(profileData);
-		return {  accountBalance };
+		return { accountBalance };
 	}
 }) satisfies PageLoad;

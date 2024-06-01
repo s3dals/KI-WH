@@ -5,6 +5,7 @@ import { getDoc, doc, setDoc } from 'firebase/firestore';
 
 export const load = (async () => {
 	if (browser) {
+		await auth.authStateReady();
 		const balancedatabase = doc(db, 'balance', auth.currentUser.uid);
 		const data = await getDoc(balancedatabase);
 

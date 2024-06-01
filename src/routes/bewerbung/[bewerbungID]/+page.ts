@@ -6,6 +6,7 @@ import { getDoc, doc } from 'firebase/firestore';
 
 export const load: PageLoad = async ({ params }) => {
 	if (browser) {
+		await auth.authStateReady();
 		const profiledatabase = doc(
 			db,
 			`applications/${auth.currentUser.uid}/userApplications`,

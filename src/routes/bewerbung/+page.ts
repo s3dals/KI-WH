@@ -1,15 +1,12 @@
 import type { PageLoad } from './$types';
 import { browser } from '$app/environment';
 import { auth, db } from '$lib/firebase';
-import {
-    getDocs,
-    collection,
-} from 'firebase/firestore';
+import { getDocs, collection } from 'firebase/firestore';
 
 export const load = (async () => {
-
-    if(browser){
-    const applicationRef =  collection(db, `applications/${auth.currentUser.uid}/userApplications`);
+	if (browser) {
+		await auth.authStateReady();
+		const applicationRef = collection(db, `applications/${auth.currentUser.uid}/userApplications`);
 
 		const data = await getDocs(applicationRef);
 		// console.log(data.docs);
@@ -20,8 +17,6 @@ export const load = (async () => {
 		// console.log(sourceData);
 		// setMovieList(filteredData);
 
-
-	return {applicationData};
-}
-
+		return { applicationData };
+	}
 }) satisfies PageLoad;
