@@ -96,16 +96,20 @@
 	}
 </script>
 
-<div class="flex items-center justify-between">
-	<h2 style="font-weight: bold">Bewerbung-Informationen:</h2>
-	<div>
+<div class="flex items-center justify-between ">
+	<h2 style="font-weight: bold">Bewerbung:</h2>
+
+	<div  class="flex items-center justify-between ">
 		<button on:click={() => editApp()} class="btn btn-sm variant-ghost-primary p-2"
-			>Bewerbung bearbeiten</button
+			>Bearbeiten</button
 		>
+		
+		&nbsp;
 		<button on:click={() => deleteApp()} class="btn btn-sm variant-filled-warning p-2"
-			>Bewerbung löschen!</button
+			>Löschen!</button
 		>
 	</div>
+	
 </div>
 <div class="container h-full mx-auto gap-2 flex flex-col">
 	{#if edit}
@@ -153,7 +157,7 @@
 		Die Bewerbung: <button
 			class="btn btn-sm variant-filled-primary p-1 s-1"
 			on:click={copyFun}
-			use:clipboard={{ input: 'exampleInput' }}>Bewerbung kopieren</button
+			use:clipboard={{ input: 'exampleInput' }}>Anschreiben kopieren</button
 		>
 	</p>
 	<textarea
