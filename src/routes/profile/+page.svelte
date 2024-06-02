@@ -217,7 +217,12 @@
 
 	onMount(() => scrollToBottom(element));
 	const scrollToBottom = async (node: any) => {
-		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+		try {
+			node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+		}catch{
+			// console.log("error")
+		}
+		
 	};
 </script>
 

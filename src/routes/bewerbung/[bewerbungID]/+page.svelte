@@ -15,6 +15,7 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	export let data: PageData;
+	let edit = false;
 
 	function copyFun() {
 		toastStore.trigger({
@@ -22,6 +23,10 @@
 			background: 'variant-ghost-success'
 		});
 	}
+	function editApp() {
+		edit = !edit;
+	}
+
 	function deleteApp(): void {
 		const confirmDelete: ModalSettings = {
 			type: 'confirm',
@@ -50,6 +55,10 @@
 	}
 
 	async function updateBewerbung(
+		appUrl: string,
+		fullName: string,
+		address: string,
+		additional: string,
 		neueBewerbung: string,
 		meeting: string,
 		note: string
@@ -57,12 +66,16 @@
 		const epoche = Date.parse(meeting);
 
 		if (!meeting) {
-			meeting = ""
+			meeting = '';
 		}
 		if (!note) {
-			note = ""
+			note = '';
 		}
 		await updateDoc(data.profiledatabase, {
+			appUrl,
+			fullName,
+			address,
+			additional,
 			application: neueBewerbung,
 			meeting,
 			note,
@@ -76,26 +89,66 @@
 	}
 	// console.log(data.applicationData.application.replace("\n\n", ''));
 
-	const meetingTrue = data.applicationData.meeting
-	let open = ""
-	if (meetingTrue){
-		open= "open"
+	const meetingTrue = data.applicationData.meeting;
+	let open = '';
+	if (meetingTrue) {
+		open = 'open';
 	}
 </script>
 
 <div class="flex items-center justify-between">
 	<h2 style="font-weight: bold">Bewerbung-Informationen:</h2>
-	<button on:click={() => deleteApp()} class="btn btn-sm variant-filled-warning p-2"
-		>Bewerbung löschen!</button
-	>
+	<div>
+		<button on:click={() => editApp()} class="btn btn-sm variant-ghost-primary p-2"
+			>Bewerbung bearbeiten</button
+		>
+		<button on:click={() => deleteApp()} class="btn btn-sm variant-filled-warning p-2"
+			>Bewerbung löschen!</button
+		>
+	</div>
 </div>
 <div class="container h-full mx-auto gap-2 flex flex-col">
-	<p>Datum: {data.applicationData?.date}</p>
-	<p>Vermieter: {data.applicationData?.fullName}</p>
-	
-	<p>Wohnunganschrift: {data.applicationData?.address} <a href="{data.applicationData?.appUrl}" target="_blank"> (link) </a>  </p>
-	
-	<p>Besonderheiten: {data.applicationData?.additional}</p>
+	{#if edit}
+		<span>Wohnung URL:</span>
+		<input
+			bind:value={data.applicationData.appUrl}
+			class="input"
+			type="text"
+			placeholder="http://www...."
+		/>
+		<span>Vermietername:</span>
+		<input
+			bind:value={data.applicationData.fullName}
+			class="input"
+			type="text"
+			placeholder="Name.."
+		/>
+		<span>Wohnungsanschrift:</span>
+		<input
+			bind:value={data.applicationData.address}
+			class="input"
+			type="text"
+			placeholder="Address.."
+		/>
+		<span>Besonderheite der Wohnung:</span>
+
+		<textarea
+			bind:value={data.applicationData.additional}
+			class="textarea"
+			rows="1"
+			placeholder="Es liegt nah zur meiner Arbeitstelle, genug Räume für uns..."
+		/>
+	{:else}
+		<p>Datum: {data.applicationData?.date}</p>
+		<p>Vermieter: {data.applicationData?.fullName}</p>
+
+		<p>
+			Wohnunganschrift: {data.applicationData?.address}
+			<a href={data.applicationData?.appUrl} target="_blank"> (link) </a>
+		</p>
+
+		<p>Besonderheiten: {data.applicationData?.additional}</p>
+	{/if}
 	<p>
 		Die Bewerbung: <button
 			class="btn btn-sm variant-filled-primary p-1 s-1"
@@ -111,7 +164,7 @@
 		bind:value={data.applicationData.application}
 	/>
 	<Accordion>
-		<AccordionItem {open} >
+		<AccordionItem {open}>
 			<svelte:fragment slot="lead">⏲️</svelte:fragment>
 			<svelte:fragment slot="summary"
 				><h2 style="font-weight: bold">Termin ist vereinbart?</h2></svelte:fragment
@@ -140,6 +193,10 @@
 		type="button"
 		on:click={() =>
 			updateBewerbung(
+				data.applicationData.appUrl,
+				data.applicationData.fullName,
+				data.applicationData.address,
+				data.applicationData.additional,
 				data.applicationData.application,
 				data.applicationData.meeting,
 				data.applicationData.note

@@ -16,8 +16,7 @@ import { auth, googleProvider } from '../firebase';
 export const authStore = writable({
 	isLoading: true,
 	currentUser: null,
-	name: '',
-	uid: ''
+	name: ''
 });
 
 export async function verifyPhoneNumber(
